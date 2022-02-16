@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nica\\Desktop\\SoftwareArchitectureLectures\\TA2\\TA2.csproj",
+      "projectUniqueName": "C:\\Users\\Nica\\Desktop\\gitfolder\\testRepoSA\\TA2.csproj",
       "projectName": "TA2",
-      "projectPath": "C:\\Users\\Nica\\Desktop\\SoftwareArchitectureLectures\\TA2\\TA2.csproj",
+      "projectPath": "C:\\Users\\Nica\\Desktop\\gitfolder\\testRepoSA\\TA2.csproj",
       "packagesPath": "C:\\Users\\Nica\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nica\\Desktop\\SoftwareArchitectureLectures\\TA2\\obj\\",
+      "outputPath": "C:\\Users\\Nica\\Desktop\\gitfolder\\testRepoSA\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Nica\\AppData\\Roaming\\NuGet\\NuGet.Config"
