@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jquery.validate.unobtrusive.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../";
+    var thisFile = "wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>jquery.validate.unobtrusive.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<p>Unobtrusive validation support library for jQuery and jQuery Validate
+Copyright (c) .NET Foundation. All rights reserved.
+Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+@version v3.2.11</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+<span class="hljs-comment">/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: false */</span>
+<span class="hljs-comment">/*global document: false, jQuery: false */</span>
+
+(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">factory</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>AMD. Register as an anonymous module.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        define(<span class="hljs-string">"jquery.validate.unobtrusive"</span>, [<span class="hljs-string">'jquery-validation'</span>], factory);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>CommonJS-like environments that support module.exports</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-built_in">module</span>.exports = factory(<span class="hljs-built_in">require</span>(<span class="hljs-string">'jquery-validation'</span>));
+    } <span class="hljs-keyword">else</span> {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Browser global</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        jQuery.validator.unobtrusive = factory(jQuery);
+    }
+}(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$</span>) </span>{
+    <span class="hljs-keyword">var</span> $jQval = $.validator,
+        adapters,
+        data_validation = <span class="hljs-string">"unobtrusiveValidation"</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setValidationValues</span>(<span class="hljs-params">options, ruleName, value</span>) </span>{
+        options.rules[ruleName] = value;
+        <span class="hljs-keyword">if</span> (options.message) {
+            options.messages[ruleName] = options.message;
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">splitAndTrim</span>(<span class="hljs-params">value</span>) </span>{
+        <span class="hljs-keyword">return</span> value.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">""</span>).split(<span class="hljs-regexp">/\s*,\s*/g</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">escapeAttributeValue</span>(<span class="hljs-params">value</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>As mentioned on http://api.jquery.com/category/selectors/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">return</span> value.replace(<span class="hljs-regexp">/([!"#$%&amp;'()*+,./:;&lt;=&gt;?@\[\\\]^`{|}~])/g</span>, <span class="hljs-string">"\\$1"</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getModelPrefix</span>(<span class="hljs-params">fieldName</span>) </span>{
+        <span class="hljs-keyword">return</span> fieldName.substr(<span class="hljs-number">0</span>, fieldName.lastIndexOf(<span class="hljs-string">"."</span>) + <span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">appendModelPrefix</span>(<span class="hljs-params">value, prefix</span>) </span>{
+        <span class="hljs-keyword">if</span> (value.indexOf(<span class="hljs-string">"*."</span>) === <span class="hljs-number">0</span>) {
+            value = value.replace(<span class="hljs-string">"*."</span>, prefix);
+        }
+        <span class="hljs-keyword">return</span> value;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onError</span>(<span class="hljs-params">error, inputElement</span>) </span>{  <span class="hljs-comment">// 'this' is the form element</span>
+        <span class="hljs-keyword">var</span> container = $(<span class="hljs-keyword">this</span>).find(<span class="hljs-string">"[data-valmsg-for='"</span> + escapeAttributeValue(inputElement[<span class="hljs-number">0</span>].name) + <span class="hljs-string">"']"</span>),
+            replaceAttrValue = container.attr(<span class="hljs-string">"data-valmsg-replace"</span>),
+            replace = replaceAttrValue ? $.parseJSON(replaceAttrValue) !== <span class="hljs-literal">false</span> : <span class="hljs-literal">null</span>;
+
+        container.removeClass(<span class="hljs-string">"field-validation-valid"</span>).addClass(<span class="hljs-string">"field-validation-error"</span>);
+        error.data(<span class="hljs-string">"unobtrusiveContainer"</span>, container);
+
+        <span class="hljs-keyword">if</span> (replace) {
+            container.empty();
+            error.removeClass(<span class="hljs-string">"input-validation-error"</span>).appendTo(container);
+        }
+        <span class="hljs-keyword">else</span> {
+            error.hide();
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onErrors</span>(<span class="hljs-params">event, validator</span>) </span>{  <span class="hljs-comment">// 'this' is the form element</span>
+        <span class="hljs-keyword">var</span> container = $(<span class="hljs-keyword">this</span>).find(<span class="hljs-string">"[data-valmsg-summary=true]"</span>),
+            list = container.find(<span class="hljs-string">"ul"</span>);
+
+        <span class="hljs-keyword">if</span> (list &amp;&amp; list.length &amp;&amp; validator.errorList.length) {
+            list.empty();
+            container.addClass(<span class="hljs-string">"validation-summary-errors"</span>).removeClass(<span class="hljs-string">"validation-summary-valid"</span>);
+
+            $.each(validator.errorList, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                $(<span class="hljs-string">"&lt;li /&gt;"</span>).html(<span class="hljs-keyword">this</span>.message).appendTo(list);
+            });
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onSuccess</span>(<span class="hljs-params">error</span>) </span>{  <span class="hljs-comment">// 'this' is the form element</span>
+        <span class="hljs-keyword">var</span> container = error.data(<span class="hljs-string">"unobtrusiveContainer"</span>);
+
+        <span class="hljs-keyword">if</span> (container) {
+            <span class="hljs-keyword">var</span> replaceAttrValue = container.attr(<span class="hljs-string">"data-valmsg-replace"</span>),
+                replace = replaceAttrValue ? $.parseJSON(replaceAttrValue) : <span class="hljs-literal">null</span>;
+
+            container.addClass(<span class="hljs-string">"field-validation-valid"</span>).removeClass(<span class="hljs-string">"field-validation-error"</span>);
+            error.removeData(<span class="hljs-string">"unobtrusiveContainer"</span>);
+
+            <span class="hljs-keyword">if</span> (replace) {
+                container.empty();
+            }
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onReset</span>(<span class="hljs-params">event</span>) </span>{  <span class="hljs-comment">// 'this' is the form element</span>
+        <span class="hljs-keyword">var</span> $form = $(<span class="hljs-keyword">this</span>),
+            key = <span class="hljs-string">'__jquery_unobtrusive_validation_form_reset'</span>;
+        <span class="hljs-keyword">if</span> ($form.data(key)) {
+            <span class="hljs-keyword">return</span>;
+        }
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Set a flag that indicates we're currently resetting the form.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        $form.data(key, <span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">try</span> {
+            $form.data(<span class="hljs-string">"validator"</span>).resetForm();
+        } <span class="hljs-keyword">finally</span> {
+            $form.removeData(key);
+        }
+
+        $form.find(<span class="hljs-string">".validation-summary-errors"</span>)
+            .addClass(<span class="hljs-string">"validation-summary-valid"</span>)
+            .removeClass(<span class="hljs-string">"validation-summary-errors"</span>);
+        $form.find(<span class="hljs-string">".field-validation-error"</span>)
+            .addClass(<span class="hljs-string">"field-validation-valid"</span>)
+            .removeClass(<span class="hljs-string">"field-validation-error"</span>)
+            .removeData(<span class="hljs-string">"unobtrusiveContainer"</span>)
+            .find(<span class="hljs-string">"&gt;*"</span>)  <span class="hljs-comment">// If we were using valmsg-replace, get the underlying error</span>
+            .removeData(<span class="hljs-string">"unobtrusiveContainer"</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">validationInfo</span>(<span class="hljs-params">form</span>) </span>{
+        <span class="hljs-keyword">var</span> $form = $(form),
+            result = $form.data(data_validation),
+            onResetProxy = $.proxy(onReset, form),
+            defaultOptions = $jQval.unobtrusive.options || {},
+            execInContext = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, args</span>) </span>{
+                <span class="hljs-keyword">var</span> func = defaultOptions[name];
+                func &amp;&amp; $.isFunction(func) &amp;&amp; func.apply(form, args);
+            };
+
+        <span class="hljs-keyword">if</span> (!result) {
+            result = {
+                <span class="hljs-attr">options</span>: {  <span class="hljs-comment">// options structure passed to jQuery Validate's validate() method</span>
+                    <span class="hljs-attr">errorClass</span>: defaultOptions.errorClass || <span class="hljs-string">"input-validation-error"</span>,
+                    <span class="hljs-attr">errorElement</span>: defaultOptions.errorElement || <span class="hljs-string">"span"</span>,
+                    <span class="hljs-attr">errorPlacement</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                        onError.apply(form, <span class="hljs-built_in">arguments</span>);
+                        execInContext(<span class="hljs-string">"errorPlacement"</span>, <span class="hljs-built_in">arguments</span>);
+                    },
+                    <span class="hljs-attr">invalidHandler</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                        onErrors.apply(form, <span class="hljs-built_in">arguments</span>);
+                        execInContext(<span class="hljs-string">"invalidHandler"</span>, <span class="hljs-built_in">arguments</span>);
+                    },
+                    <span class="hljs-attr">messages</span>: {},
+                    <span class="hljs-attr">rules</span>: {},
+                    <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                        onSuccess.apply(form, <span class="hljs-built_in">arguments</span>);
+                        execInContext(<span class="hljs-string">"success"</span>, <span class="hljs-built_in">arguments</span>);
+                    }
+                },
+                <span class="hljs-attr">attachValidation</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                    $form
+                        .off(<span class="hljs-string">"reset."</span> + data_validation, onResetProxy)
+                        .on(<span class="hljs-string">"reset."</span> + data_validation, onResetProxy)
+                        .validate(<span class="hljs-keyword">this</span>.options);
+                },
+                <span class="hljs-attr">validate</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{  <span class="hljs-comment">// a validation function that is called by unobtrusive Ajax</span>
+                    $form.validate();
+                    <span class="hljs-keyword">return</span> $form.valid();
+                }
+            };
+            $form.data(data_validation, result);
+        }
+
+        <span class="hljs-keyword">return</span> result;
+    }
+
+    $jQval.unobtrusive = {
+        <span class="hljs-attr">adapters</span>: [],
+
+        <span class="hljs-attr">parseElement</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, skipAttach</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>/ <summary>
+/ Parses a single HTML element for unobtrusive validation attributes.
+/ </summary>
+/ <param name="element" domElement="true">The HTML element to be parsed.</param>
+/ <param name="skipAttach" type="Boolean">[Optional] true to skip attaching the
+/ validation to the form. If parsing just this single element, you should specify true.
+/ If parsing several elements, you should specify false, and manually attach the validation
+/ to the form when you are finished. The default is false.</param></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            <span class="hljs-keyword">var</span> $element = $(element),
+                form = $element.parents(<span class="hljs-string">"form"</span>)[<span class="hljs-number">0</span>],
+                valInfo, rules, messages;
+
+            <span class="hljs-keyword">if</span> (!form) {  <span class="hljs-comment">// Cannot do client-side validation without a form</span>
+                <span class="hljs-keyword">return</span>;
+            }
+
+            valInfo = validationInfo(form);
+            valInfo.options.rules[element.name] = rules = {};
+            valInfo.options.messages[element.name] = messages = {};
+
+            $.each(<span class="hljs-keyword">this</span>.adapters, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> prefix = <span class="hljs-string">"data-val-"</span> + <span class="hljs-keyword">this</span>.name,
+                    message = $element.attr(prefix),
+                    paramValues = {};
+
+                <span class="hljs-keyword">if</span> (message !== <span class="hljs-literal">undefined</span>) {  <span class="hljs-comment">// Compare against undefined, because an empty message is legal (and falsy)</span>
+                    prefix += <span class="hljs-string">"-"</span>;
+
+                    $.each(<span class="hljs-keyword">this</span>.params, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                        paramValues[<span class="hljs-keyword">this</span>] = $element.attr(prefix + <span class="hljs-keyword">this</span>);
+                    });
+
+                    <span class="hljs-keyword">this</span>.adapt({
+                        <span class="hljs-attr">element</span>: element,
+                        <span class="hljs-attr">form</span>: form,
+                        <span class="hljs-attr">message</span>: message,
+                        <span class="hljs-attr">params</span>: paramValues,
+                        <span class="hljs-attr">rules</span>: rules,
+                        <span class="hljs-attr">messages</span>: messages
+                    });
+                }
+            });
+
+            $.extend(rules, { <span class="hljs-string">"__dummy__"</span>: <span class="hljs-literal">true</span> });
+
+            <span class="hljs-keyword">if</span> (!skipAttach) {
+                valInfo.attachValidation();
+            }
+        },
+
+        <span class="hljs-attr">parse</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>/ <summary>
+/ Parses all the HTML elements in the specified selector. It looks for input elements decorated
+/ with the [data-val=true] attribute value and enables validation according to the data-val-*
+/ attribute values.
+/ </summary>
+/ <param name="selector" type="String">Any valid jQuery selector.</param></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>$forms includes all forms in selector's DOM hierarchy (parent, children and self) that have at least one
+element with data-val=true</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            <span class="hljs-keyword">var</span> $selector = $(selector),
+                $forms = $selector.parents()
+                    .addBack()
+                    .filter(<span class="hljs-string">"form"</span>)
+                    .add($selector.find(<span class="hljs-string">"form"</span>))
+                    .has(<span class="hljs-string">"[data-val=true]"</span>);
+
+            $selector.find(<span class="hljs-string">"[data-val=true]"</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                $jQval.unobtrusive.parseElement(<span class="hljs-keyword">this</span>, <span class="hljs-literal">true</span>);
+            });
+
+            $forms.each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> info = validationInfo(<span class="hljs-keyword">this</span>);
+                <span class="hljs-keyword">if</span> (info) {
+                    info.attachValidation();
+                }
+            });
+        }
+    };
+
+    adapters = $jQval.unobtrusive.adapters;
+
+    adapters.add = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">adapterName, params, fn</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>/ <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation.</summary>
+/ <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
+/ in the data-val-nnnn HTML attribute (where nnnn is the adapter name).</param>
+/ <param name="params" type="Array" optional="true">[Optional] An array of parameter names (strings) that will
+/ be extracted from the data-val-nnnn-mmmm HTML attributes (where nnnn is the adapter name, and
+/ mmmm is the parameter name).</param>
+/ <param name="fn" type="Function">The function to call, which adapts the values from the HTML
+/ attributes into jQuery Validate rules and/or messages.</param>
+/ <returns type="jQuery.validator.unobtrusive.adapters" /></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">if</span> (!fn) {  <span class="hljs-comment">// Called with no params, just a function</span>
+            fn = params;
+            params = [];
+        }
+        <span class="hljs-keyword">this</span>.push({ <span class="hljs-attr">name</span>: adapterName, <span class="hljs-attr">params</span>: params, <span class="hljs-attr">adapt</span>: fn });
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    };
+
+    adapters.addBool = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">adapterName, ruleName</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>/ <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
+/ the jQuery Validate validation rule has no parameter values.</summary>
+/ <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
+/ in the data-val-nnnn HTML attribute (where nnnn is the adapter name).</param>
+/ <param name="ruleName" type="String" optional="true">[Optional] The name of the jQuery Validate rule. If not provided, the value
+/ of adapterName will be used instead.</param>
+/ <returns type="jQuery.validator.unobtrusive.adapters" /></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.add(adapterName, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+            setValidationValues(options, ruleName || adapterName, <span class="hljs-literal">true</span>);
+        });
+    };
+
+    adapters.addMinMax = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">adapterName, minRuleName, maxRuleName, minMaxRuleName, minAttribute, maxAttribute</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>/ <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
+/ the jQuery Validate validation has three potential rules (one for min-only, one for max-only, and
+/ one for min-and-max). The HTML parameters are expected to be named -min and -max.</summary>
+/ <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
+/ in the data-val-nnnn HTML attribute (where nnnn is the adapter name).</param>
+/ <param name="minRuleName" type="String">The name of the jQuery Validate rule to be used when you only
+/ have a minimum value.</param>
+/ <param name="maxRuleName" type="String">The name of the jQuery Validate rule to be used when you only
+/ have a maximum value.</param>
+/ <param name="minMaxRuleName" type="String">The name of the jQuery Validate rule to be used when you
+/ have both a minimum and maximum value.</param>
+/ <param name="minAttribute" type="String" optional="true">[Optional] The name of the HTML attribute that
+/ contains the minimum value. The default is &quot;min&quot;.</param>
+/ <param name="maxAttribute" type="String" optional="true">[Optional] The name of the HTML attribute that
+/ contains the maximum value. The default is &quot;max&quot;.</param>
+/ <returns type="jQuery.validator.unobtrusive.adapters" /></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.add(adapterName, [minAttribute || <span class="hljs-string">"min"</span>, maxAttribute || <span class="hljs-string">"max"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+            <span class="hljs-keyword">var</span> min = options.params.min,
+                max = options.params.max;
+
+            <span class="hljs-keyword">if</span> (min &amp;&amp; max) {
+                setValidationValues(options, minMaxRuleName, [min, max]);
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (min) {
+                setValidationValues(options, minRuleName, min);
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (max) {
+                setValidationValues(options, maxRuleName, max);
+            }
+        });
+    };
+
+    adapters.addSingleVal = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">adapterName, attribute, ruleName</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>/ <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
+/ the jQuery Validate validation rule has a single value.</summary>
+/ <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
+/ in the data-val-nnnn HTML attribute(where nnnn is the adapter name).</param>
+/ <param name="attribute" type="String">[Optional] The name of the HTML attribute that contains the value.
+/ The default is &quot;val&quot;.</param>
+/ <param name="ruleName" type="String" optional="true">[Optional] The name of the jQuery Validate rule. If not provided, the value
+/ of adapterName will be used instead.</param>
+/ <returns type="jQuery.validator.unobtrusive.adapters" /></p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.add(adapterName, [attribute || <span class="hljs-string">"val"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+            setValidationValues(options, ruleName || adapterName, options.params[attribute]);
+        });
+    };
+
+    $jQval.addMethod(<span class="hljs-string">"__dummy__"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, element, params</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    });
+
+    $jQval.addMethod(<span class="hljs-string">"regex"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, element, params</span>) </span>{
+        <span class="hljs-keyword">var</span> match;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.optional(element)) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        }
+
+        match = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(params).exec(value);
+        <span class="hljs-keyword">return</span> (match &amp;&amp; (match.index === <span class="hljs-number">0</span>) &amp;&amp; (match[<span class="hljs-number">0</span>].length === value.length));
+    });
+
+    $jQval.addMethod(<span class="hljs-string">"nonalphamin"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, element, nonalphamin</span>) </span>{
+        <span class="hljs-keyword">var</span> match;
+        <span class="hljs-keyword">if</span> (nonalphamin) {
+            match = value.match(<span class="hljs-regexp">/\W/g</span>);
+            match = match &amp;&amp; match.length &gt;= nonalphamin;
+        }
+        <span class="hljs-keyword">return</span> match;
+    });
+
+    <span class="hljs-keyword">if</span> ($jQval.methods.extension) {
+        adapters.addSingleVal(<span class="hljs-string">"accept"</span>, <span class="hljs-string">"mimtype"</span>);
+        adapters.addSingleVal(<span class="hljs-string">"extension"</span>, <span class="hljs-string">"extension"</span>);
+    } <span class="hljs-keyword">else</span> {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>for backward compatibility, when the 'extension' validation method does not exist, such as with versions
+of JQuery Validation plugin prior to 1.10, we should use the 'accept' method for
+validating the extension, and ignore mime-type validations as they are not supported.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        adapters.addSingleVal(<span class="hljs-string">"extension"</span>, <span class="hljs-string">"extension"</span>, <span class="hljs-string">"accept"</span>);
+    }
+
+    adapters.addSingleVal(<span class="hljs-string">"regex"</span>, <span class="hljs-string">"pattern"</span>);
+    adapters.addBool(<span class="hljs-string">"creditcard"</span>).addBool(<span class="hljs-string">"date"</span>).addBool(<span class="hljs-string">"digits"</span>).addBool(<span class="hljs-string">"email"</span>).addBool(<span class="hljs-string">"number"</span>).addBool(<span class="hljs-string">"url"</span>);
+    adapters.addMinMax(<span class="hljs-string">"length"</span>, <span class="hljs-string">"minlength"</span>, <span class="hljs-string">"maxlength"</span>, <span class="hljs-string">"rangelength"</span>).addMinMax(<span class="hljs-string">"range"</span>, <span class="hljs-string">"min"</span>, <span class="hljs-string">"max"</span>, <span class="hljs-string">"range"</span>);
+    adapters.addMinMax(<span class="hljs-string">"minlength"</span>, <span class="hljs-string">"minlength"</span>).addMinMax(<span class="hljs-string">"maxlength"</span>, <span class="hljs-string">"minlength"</span>, <span class="hljs-string">"maxlength"</span>);
+    adapters.add(<span class="hljs-string">"equalto"</span>, [<span class="hljs-string">"other"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+        <span class="hljs-keyword">var</span> prefix = getModelPrefix(options.element.name),
+            other = options.params.other,
+            fullOtherName = appendModelPrefix(other, prefix),
+            element = $(options.form).find(<span class="hljs-string">":input"</span>).filter(<span class="hljs-string">"[name='"</span> + escapeAttributeValue(fullOtherName) + <span class="hljs-string">"']"</span>)[<span class="hljs-number">0</span>];
+
+        setValidationValues(options, <span class="hljs-string">"equalTo"</span>, element);
+    });
+    adapters.add(<span class="hljs-string">"required"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<p>jQuery Validate equates &quot;required&quot; with &quot;mandatory&quot; for checkbox elements</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">if</span> (options.element.tagName.toUpperCase() !== <span class="hljs-string">"INPUT"</span> || options.element.type.toUpperCase() !== <span class="hljs-string">"CHECKBOX"</span>) {
+            setValidationValues(options, <span class="hljs-string">"required"</span>, <span class="hljs-literal">true</span>);
+        }
+    });
+    adapters.add(<span class="hljs-string">"remote"</span>, [<span class="hljs-string">"url"</span>, <span class="hljs-string">"type"</span>, <span class="hljs-string">"additionalfields"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+        <span class="hljs-keyword">var</span> value = {
+            <span class="hljs-attr">url</span>: options.params.url,
+            <span class="hljs-attr">type</span>: options.params.type || <span class="hljs-string">"GET"</span>,
+            <span class="hljs-attr">data</span>: {}
+        },
+            prefix = getModelPrefix(options.element.name);
+
+        $.each(splitAndTrim(options.params.additionalfields || options.element.name), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, fieldName</span>) </span>{
+            <span class="hljs-keyword">var</span> paramName = appendModelPrefix(fieldName, prefix);
+            value.data[paramName] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> field = $(options.form).find(<span class="hljs-string">":input"</span>).filter(<span class="hljs-string">"[name='"</span> + escapeAttributeValue(paramName) + <span class="hljs-string">"']"</span>);
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>For checkboxes and radio buttons, only pick up values from checked fields.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                <span class="hljs-keyword">if</span> (field.is(<span class="hljs-string">":checkbox"</span>)) {
+                    <span class="hljs-keyword">return</span> field.filter(<span class="hljs-string">":checked"</span>).val() || field.filter(<span class="hljs-string">":hidden"</span>).val() || <span class="hljs-string">''</span>;
+                }
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (field.is(<span class="hljs-string">":radio"</span>)) {
+                    <span class="hljs-keyword">return</span> field.filter(<span class="hljs-string">":checked"</span>).val() || <span class="hljs-string">''</span>;
+                }
+                <span class="hljs-keyword">return</span> field.val();
+            };
+        });
+
+        setValidationValues(options, <span class="hljs-string">"remote"</span>, value);
+    });
+    adapters.add(<span class="hljs-string">"password"</span>, [<span class="hljs-string">"min"</span>, <span class="hljs-string">"nonalphamin"</span>, <span class="hljs-string">"regex"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+        <span class="hljs-keyword">if</span> (options.params.min) {
+            setValidationValues(options, <span class="hljs-string">"minlength"</span>, options.params.min);
+        }
+        <span class="hljs-keyword">if</span> (options.params.nonalphamin) {
+            setValidationValues(options, <span class="hljs-string">"nonalphamin"</span>, options.params.nonalphamin);
+        }
+        <span class="hljs-keyword">if</span> (options.params.regex) {
+            setValidationValues(options, <span class="hljs-string">"regex"</span>, options.params.regex);
+        }
+    });
+    adapters.add(<span class="hljs-string">"fileextensions"</span>, [<span class="hljs-string">"extensions"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+        setValidationValues(options, <span class="hljs-string">"extension"</span>, options.params.extensions);
+    });
+
+    $(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        $jQval.unobtrusive.parse(<span class="hljs-built_in">document</span>);
+    });
+
+    <span class="hljs-keyword">return</span> $jQval.unobtrusive;
+}));
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

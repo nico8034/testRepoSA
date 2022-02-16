@@ -1,0 +1,3091 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jquery.validate.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../../doc-style.css" />
+  <script src="../../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../../";
+    var thisFile = "wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>jquery.validate.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>!
+jQuery Validation Plugin v1.17.0</p>
+</div>
+<div class="body">
+<p>https://jqueryvalidation.org/</p>
+<p>Copyright (c) 2017 Jörn Zaefferer
+Released under the MIT license</p>
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> factory </span>) </span>{
+	<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> define === <span class="hljs-string">"function"</span> &amp;&amp; define.amd ) {
+		define( [<span class="hljs-string">"jquery"</span>], factory );
+	} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> === <span class="hljs-string">"object"</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) {
+		<span class="hljs-built_in">module</span>.exports = factory( <span class="hljs-built_in">require</span>( <span class="hljs-string">"jquery"</span> ) );
+	} <span class="hljs-keyword">else</span> {
+		factory( jQuery );
+	}
+}(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> $ </span>) </span>{
+
+$.extend( $.fn, {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>https://jqueryvalidation.org/validate/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	validate: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> options </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>If nothing is selected, return nothing; can't chain anyway</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.length ) {
+			<span class="hljs-keyword">if</span> ( options &amp;&amp; options.debug &amp;&amp; <span class="hljs-built_in">window</span>.console ) {
+				<span class="hljs-built_in">console</span>.warn( <span class="hljs-string">"Nothing selected, can't validate, returning nothing."</span> );
+			}
+			<span class="hljs-keyword">return</span>;
+		}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Check if a validator for this form was already created</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">var</span> validator = $.data( <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ], <span class="hljs-string">"validator"</span> );
+		<span class="hljs-keyword">if</span> ( validator ) {
+			<span class="hljs-keyword">return</span> validator;
+		}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Add novalidate tag if HTML5.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">this</span>.attr( <span class="hljs-string">"novalidate"</span>, <span class="hljs-string">"novalidate"</span> );
+
+		validator = <span class="hljs-keyword">new</span> $.validator( options, <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ] );
+		$.data( <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ], <span class="hljs-string">"validator"</span>, validator );
+
+		<span class="hljs-keyword">if</span> ( validator.settings.onsubmit ) {
+
+			<span class="hljs-keyword">this</span>.on( <span class="hljs-string">"click.validate"</span>, <span class="hljs-string">":submit"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> event </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Track the used submit button to properly handle scripted
+submits later.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				validator.submitButton = event.currentTarget;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Allow suppressing validation by adding a cancel class to the submit button</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( $( <span class="hljs-keyword">this</span> ).hasClass( <span class="hljs-string">"cancel"</span> ) ) {
+					validator.cancelSubmit = <span class="hljs-literal">true</span>;
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Allow suppressing validation by adding the html5 formnovalidate attribute to the submit button</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( $( <span class="hljs-keyword">this</span> ).attr( <span class="hljs-string">"formnovalidate"</span> ) !== <span class="hljs-literal">undefined</span> ) {
+					validator.cancelSubmit = <span class="hljs-literal">true</span>;
+				}
+			} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>Validate the form on submit</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">this</span>.on( <span class="hljs-string">"submit.validate"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> event </span>) </span>{
+				<span class="hljs-keyword">if</span> ( validator.settings.debug ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Prevent form submit to be able to see console output</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					event.preventDefault();
+				}
+				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handle</span>(<span class="hljs-params"></span>) </span>{
+					<span class="hljs-keyword">var</span> hidden, result;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>Insert a hidden input as a replacement for the missing submit button
+The hidden input is inserted in two cases:</p>
+<ul>
+<li>A user defined a <code>submitHandler</code></li>
+<li>There was a pending request due to <code>remote</code> method and <code>stopRequest()</code>
+was called to submit the form in case it's valid</li>
+</ul>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					<span class="hljs-keyword">if</span> ( validator.submitButton &amp;&amp; ( validator.settings.submitHandler || validator.formSubmitted ) ) {
+						hidden = $( <span class="hljs-string">"&lt;input type='hidden'/&gt;"</span> )
+							.attr( <span class="hljs-string">"name"</span>, validator.submitButton.name )
+							.val( $( validator.submitButton ).val() )
+							.appendTo( validator.currentForm );
+					}
+
+					<span class="hljs-keyword">if</span> ( validator.settings.submitHandler ) {
+						result = validator.settings.submitHandler.call( validator, validator.currentForm, event );
+						<span class="hljs-keyword">if</span> ( hidden ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>And clean up afterwards; thanks to no-block-scope, hidden can be referenced</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">							hidden.remove();
+						}
+						<span class="hljs-keyword">if</span> ( result !== <span class="hljs-literal">undefined</span> ) {
+							<span class="hljs-keyword">return</span> result;
+						}
+						<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+					}
+					<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>Prevent submit for invalid forms or custom submit handlers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( validator.cancelSubmit ) {
+					validator.cancelSubmit = <span class="hljs-literal">false</span>;
+					<span class="hljs-keyword">return</span> handle();
+				}
+				<span class="hljs-keyword">if</span> ( validator.form() ) {
+					<span class="hljs-keyword">if</span> ( validator.pendingRequest ) {
+						validator.formSubmitted = <span class="hljs-literal">true</span>;
+						<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+					}
+					<span class="hljs-keyword">return</span> handle();
+				} <span class="hljs-keyword">else</span> {
+					validator.focusInvalid();
+					<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+				}
+			} );
+		}
+
+		<span class="hljs-keyword">return</span> validator;
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>https://jqueryvalidation.org/valid/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	valid: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		<span class="hljs-keyword">var</span> valid, validator, errorList;
+
+		<span class="hljs-keyword">if</span> ( $( <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ] ).is( <span class="hljs-string">"form"</span> ) ) {
+			valid = <span class="hljs-keyword">this</span>.validate().form();
+		} <span class="hljs-keyword">else</span> {
+			errorList = [];
+			valid = <span class="hljs-literal">true</span>;
+			validator = $( <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ].form ).validate();
+			<span class="hljs-keyword">this</span>.each( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+				valid = validator.element( <span class="hljs-keyword">this</span> ) &amp;&amp; valid;
+				<span class="hljs-keyword">if</span> ( !valid ) {
+					errorList = errorList.concat( validator.errorList );
+				}
+			} );
+			validator.errorList = errorList;
+		}
+		<span class="hljs-keyword">return</span> valid;
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<p>https://jqueryvalidation.org/rules/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	rules: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> command, argument </span>) </span>{
+		<span class="hljs-keyword">var</span> element = <span class="hljs-keyword">this</span>[ <span class="hljs-number">0</span> ],
+			settings, staticRules, existingRules, data, param, filtered;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>If nothing is selected, return empty object; can't chain anyway</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( element == <span class="hljs-literal">null</span> ) {
+			<span class="hljs-keyword">return</span>;
+		}
+
+		<span class="hljs-keyword">if</span> ( !element.form &amp;&amp; element.hasAttribute( <span class="hljs-string">"contenteditable"</span> ) ) {
+			element.form = <span class="hljs-keyword">this</span>.closest( <span class="hljs-string">"form"</span> )[ <span class="hljs-number">0</span> ];
+			element.name = <span class="hljs-keyword">this</span>.attr( <span class="hljs-string">"name"</span> );
+		}
+
+		<span class="hljs-keyword">if</span> ( element.form == <span class="hljs-literal">null</span> ) {
+			<span class="hljs-keyword">return</span>;
+		}
+
+		<span class="hljs-keyword">if</span> ( command ) {
+			settings = $.data( element.form, <span class="hljs-string">"validator"</span> ).settings;
+			staticRules = settings.rules;
+			existingRules = $.validator.staticRules( element );
+			<span class="hljs-keyword">switch</span> ( command ) {
+			<span class="hljs-keyword">case</span> <span class="hljs-string">"add"</span>:
+				$.extend( existingRules, $.validator.normalizeRule( argument ) );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17"></a>
+</div>
+<p>Remove messages from rules, but allow them to be set separately</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">delete</span> existingRules.messages;
+				staticRules[ element.name ] = existingRules;
+				<span class="hljs-keyword">if</span> ( argument.messages ) {
+					settings.messages[ element.name ] = $.extend( settings.messages[ element.name ], argument.messages );
+				}
+				<span class="hljs-keyword">break</span>;
+			<span class="hljs-keyword">case</span> <span class="hljs-string">"remove"</span>:
+				<span class="hljs-keyword">if</span> ( !argument ) {
+					<span class="hljs-keyword">delete</span> staticRules[ element.name ];
+					<span class="hljs-keyword">return</span> existingRules;
+				}
+				filtered = {};
+				$.each( argument.split( <span class="hljs-regexp">/\s/</span> ), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> index, method </span>) </span>{
+					filtered[ method ] = existingRules[ method ];
+					<span class="hljs-keyword">delete</span> existingRules[ method ];
+				} );
+				<span class="hljs-keyword">return</span> filtered;
+			}
+		}
+
+		data = $.validator.normalizeRules(
+		$.extend(
+			{},
+			$.validator.classRules( element ),
+			$.validator.attributeRules( element ),
+			$.validator.dataRules( element ),
+			$.validator.staticRules( element )
+		), element );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18"></a>
+</div>
+<p>Make sure required is at front</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( data.required ) {
+			param = data.required;
+			<span class="hljs-keyword">delete</span> data.required;
+			data = $.extend( { <span class="hljs-attr">required</span>: param }, data );
+		}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19"></a>
+</div>
+<p>Make sure remote is at back</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( data.remote ) {
+			param = data.remote;
+			<span class="hljs-keyword">delete</span> data.remote;
+			data = $.extend( data, { <span class="hljs-attr">remote</span>: param } );
+		}
+
+		<span class="hljs-keyword">return</span> data;
+	}
+} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20"></a>
+</div>
+<p>Custom selectors</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">$.extend( $.expr.pseudos || $.expr[ <span class="hljs-string">":"</span> ], {		<span class="hljs-comment">// '|| $.expr[ ":" ]' here enables backwards compatibility to jQuery 1.7. Can be removed when dropping jQ 1.7.x support</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21"></a>
+</div>
+<p>https://jqueryvalidation.org/blank-selector/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	blank: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> a </span>) </span>{
+		<span class="hljs-keyword">return</span> !$.trim( <span class="hljs-string">""</span> + $( a ).val() );
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22"></a>
+</div>
+<p>https://jqueryvalidation.org/filled-selector/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	filled: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> a </span>) </span>{
+		<span class="hljs-keyword">var</span> val = $( a ).val();
+		<span class="hljs-keyword">return</span> val !== <span class="hljs-literal">null</span> &amp;&amp; !!$.trim( <span class="hljs-string">""</span> + val );
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23"></a>
+</div>
+<p>https://jqueryvalidation.org/unchecked-selector/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	unchecked: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> a </span>) </span>{
+		<span class="hljs-keyword">return</span> !$( a ).prop( <span class="hljs-string">"checked"</span> );
+	}
+} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-24" id="section-24"></a>
+</div>
+<p>Constructor for validator</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">$.validator = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> options, form </span>) </span>{
+	<span class="hljs-keyword">this</span>.settings = $.extend( <span class="hljs-literal">true</span>, {}, $.validator.defaults, options );
+	<span class="hljs-keyword">this</span>.currentForm = form;
+	<span class="hljs-keyword">this</span>.init();
+};
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-25" id="section-25"></a>
+</div>
+<p>https://jqueryvalidation.org/jQuery.validator.format/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">$.validator.format = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> source, params </span>) </span>{
+	<span class="hljs-keyword">if</span> ( <span class="hljs-built_in">arguments</span>.length === <span class="hljs-number">1</span> ) {
+		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> args = $.makeArray( <span class="hljs-built_in">arguments</span> );
+			args.unshift( source );
+			<span class="hljs-keyword">return</span> $.validator.format.apply( <span class="hljs-keyword">this</span>, args );
+		};
+	}
+	<span class="hljs-keyword">if</span> ( params === <span class="hljs-literal">undefined</span> ) {
+		<span class="hljs-keyword">return</span> source;
+	}
+	<span class="hljs-keyword">if</span> ( <span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">2</span> &amp;&amp; params.constructor !== <span class="hljs-built_in">Array</span>  ) {
+		params = $.makeArray( <span class="hljs-built_in">arguments</span> ).slice( <span class="hljs-number">1</span> );
+	}
+	<span class="hljs-keyword">if</span> ( params.constructor !== <span class="hljs-built_in">Array</span> ) {
+		params = [ params ];
+	}
+	$.each( params, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> i, n </span>) </span>{
+		source = source.replace( <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>( <span class="hljs-string">"\\{"</span> + i + <span class="hljs-string">"\\}"</span>, <span class="hljs-string">"g"</span> ), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> n;
+		} );
+	} );
+	<span class="hljs-keyword">return</span> source;
+};
+
+$.extend( $.validator, {
+
+	<span class="hljs-attr">defaults</span>: {
+		<span class="hljs-attr">messages</span>: {},
+		<span class="hljs-attr">groups</span>: {},
+		<span class="hljs-attr">rules</span>: {},
+		<span class="hljs-attr">errorClass</span>: <span class="hljs-string">"error"</span>,
+		<span class="hljs-attr">pendingClass</span>: <span class="hljs-string">"pending"</span>,
+		<span class="hljs-attr">validClass</span>: <span class="hljs-string">"valid"</span>,
+		<span class="hljs-attr">errorElement</span>: <span class="hljs-string">"label"</span>,
+		<span class="hljs-attr">focusCleanup</span>: <span class="hljs-literal">false</span>,
+		<span class="hljs-attr">focusInvalid</span>: <span class="hljs-literal">true</span>,
+		<span class="hljs-attr">errorContainer</span>: $( [] ),
+		<span class="hljs-attr">errorLabelContainer</span>: $( [] ),
+		<span class="hljs-attr">onsubmit</span>: <span class="hljs-literal">true</span>,
+		<span class="hljs-attr">ignore</span>: <span class="hljs-string">":hidden"</span>,
+		<span class="hljs-attr">ignoreTitle</span>: <span class="hljs-literal">false</span>,
+		<span class="hljs-attr">onfocusin</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">this</span>.lastActive = element;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-26" id="section-26"></a>
+</div>
+<p>Hide error label and remove error class on focus if enabled</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.focusCleanup ) {
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.unhighlight ) {
+					<span class="hljs-keyword">this</span>.settings.unhighlight.call( <span class="hljs-keyword">this</span>, element, <span class="hljs-keyword">this</span>.settings.errorClass, <span class="hljs-keyword">this</span>.settings.validClass );
+				}
+				<span class="hljs-keyword">this</span>.hideThese( <span class="hljs-keyword">this</span>.errorsFor( element ) );
+			}
+		},
+		<span class="hljs-attr">onfocusout</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.checkable( element ) &amp;&amp; ( element.name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.submitted || !<span class="hljs-keyword">this</span>.optional( element ) ) ) {
+				<span class="hljs-keyword">this</span>.element( element );
+			}
+		},
+		<span class="hljs-attr">onkeyup</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, event </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-27" id="section-27"></a>
+</div>
+<p>Avoid revalidate the field when pressing one of the following keys
+Shift       =&gt; 16
+Ctrl        =&gt; 17
+Alt         =&gt; 18
+Caps lock   =&gt; 20
+End         =&gt; 35
+Home        =&gt; 36
+Left arrow  =&gt; 37
+Up arrow    =&gt; 38
+Right arrow =&gt; 39
+Down arrow  =&gt; 40
+Insert      =&gt; 45
+Num lock    =&gt; 144
+AltGr key   =&gt; 225</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">var</span> excludedKeys = [
+				<span class="hljs-number">16</span>, <span class="hljs-number">17</span>, <span class="hljs-number">18</span>, <span class="hljs-number">20</span>, <span class="hljs-number">35</span>, <span class="hljs-number">36</span>, <span class="hljs-number">37</span>,
+				<span class="hljs-number">38</span>, <span class="hljs-number">39</span>, <span class="hljs-number">40</span>, <span class="hljs-number">45</span>, <span class="hljs-number">144</span>, <span class="hljs-number">225</span>
+			];
+
+			<span class="hljs-keyword">if</span> ( event.which === <span class="hljs-number">9</span> &amp;&amp; <span class="hljs-keyword">this</span>.elementValue( element ) === <span class="hljs-string">""</span> || $.inArray( event.keyCode, excludedKeys ) !== <span class="hljs-number">-1</span> ) {
+				<span class="hljs-keyword">return</span>;
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( element.name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.submitted || element.name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.invalid ) {
+				<span class="hljs-keyword">this</span>.element( element );
+			}
+		},
+		<span class="hljs-attr">onclick</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-28" id="section-28"></a>
+</div>
+<p>Click on selects, radiobuttons and checkboxes</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( element.name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.submitted ) {
+				<span class="hljs-keyword">this</span>.element( element );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-29" id="section-29"></a>
+</div>
+<p>Or option elements, check parent select in that case</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( element.parentNode.name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.submitted ) {
+				<span class="hljs-keyword">this</span>.element( element.parentNode );
+			}
+		},
+		<span class="hljs-attr">highlight</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, errorClass, validClass </span>) </span>{
+			<span class="hljs-keyword">if</span> ( element.type === <span class="hljs-string">"radio"</span> ) {
+				<span class="hljs-keyword">this</span>.findByName( element.name ).addClass( errorClass ).removeClass( validClass );
+			} <span class="hljs-keyword">else</span> {
+				$( element ).addClass( errorClass ).removeClass( validClass );
+			}
+		},
+		<span class="hljs-attr">unhighlight</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, errorClass, validClass </span>) </span>{
+			<span class="hljs-keyword">if</span> ( element.type === <span class="hljs-string">"radio"</span> ) {
+				<span class="hljs-keyword">this</span>.findByName( element.name ).removeClass( errorClass ).addClass( validClass );
+			} <span class="hljs-keyword">else</span> {
+				$( element ).removeClass( errorClass ).addClass( validClass );
+			}
+		}
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-30" id="section-30"></a>
+</div>
+<p>https://jqueryvalidation.org/jQuery.validator.setDefaults/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	setDefaults: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> settings </span>) </span>{
+		$.extend( $.validator.defaults, settings );
+	},
+
+	<span class="hljs-attr">messages</span>: {
+		<span class="hljs-attr">required</span>: <span class="hljs-string">"This field is required."</span>,
+		<span class="hljs-attr">remote</span>: <span class="hljs-string">"Please fix this field."</span>,
+		<span class="hljs-attr">email</span>: <span class="hljs-string">"Please enter a valid email address."</span>,
+		<span class="hljs-attr">url</span>: <span class="hljs-string">"Please enter a valid URL."</span>,
+		<span class="hljs-attr">date</span>: <span class="hljs-string">"Please enter a valid date."</span>,
+		<span class="hljs-attr">dateISO</span>: <span class="hljs-string">"Please enter a valid date (ISO)."</span>,
+		<span class="hljs-attr">number</span>: <span class="hljs-string">"Please enter a valid number."</span>,
+		<span class="hljs-attr">digits</span>: <span class="hljs-string">"Please enter only digits."</span>,
+		<span class="hljs-attr">equalTo</span>: <span class="hljs-string">"Please enter the same value again."</span>,
+		<span class="hljs-attr">maxlength</span>: $.validator.format( <span class="hljs-string">"Please enter no more than {0} characters."</span> ),
+		<span class="hljs-attr">minlength</span>: $.validator.format( <span class="hljs-string">"Please enter at least {0} characters."</span> ),
+		<span class="hljs-attr">rangelength</span>: $.validator.format( <span class="hljs-string">"Please enter a value between {0} and {1} characters long."</span> ),
+		<span class="hljs-attr">range</span>: $.validator.format( <span class="hljs-string">"Please enter a value between {0} and {1}."</span> ),
+		<span class="hljs-attr">max</span>: $.validator.format( <span class="hljs-string">"Please enter a value less than or equal to {0}."</span> ),
+		<span class="hljs-attr">min</span>: $.validator.format( <span class="hljs-string">"Please enter a value greater than or equal to {0}."</span> ),
+		<span class="hljs-attr">step</span>: $.validator.format( <span class="hljs-string">"Please enter a multiple of {0}."</span> )
+	},
+
+	<span class="hljs-attr">autoCreateRanges</span>: <span class="hljs-literal">false</span>,
+
+	<span class="hljs-attr">prototype</span>: {
+
+		<span class="hljs-attr">init</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.labelContainer = $( <span class="hljs-keyword">this</span>.settings.errorLabelContainer );
+			<span class="hljs-keyword">this</span>.errorContext = <span class="hljs-keyword">this</span>.labelContainer.length &amp;&amp; <span class="hljs-keyword">this</span>.labelContainer || $( <span class="hljs-keyword">this</span>.currentForm );
+			<span class="hljs-keyword">this</span>.containers = $( <span class="hljs-keyword">this</span>.settings.errorContainer ).add( <span class="hljs-keyword">this</span>.settings.errorLabelContainer );
+			<span class="hljs-keyword">this</span>.submitted = {};
+			<span class="hljs-keyword">this</span>.valueCache = {};
+			<span class="hljs-keyword">this</span>.pendingRequest = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">this</span>.pending = {};
+			<span class="hljs-keyword">this</span>.invalid = {};
+			<span class="hljs-keyword">this</span>.reset();
+
+			<span class="hljs-keyword">var</span> groups = ( <span class="hljs-keyword">this</span>.groups = {} ),
+				rules;
+			$.each( <span class="hljs-keyword">this</span>.settings.groups, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> key, value </span>) </span>{
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">"string"</span> ) {
+					value = value.split( <span class="hljs-regexp">/\s/</span> );
+				}
+				$.each( value, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> index, name </span>) </span>{
+					groups[ name ] = key;
+				} );
+			} );
+			rules = <span class="hljs-keyword">this</span>.settings.rules;
+			$.each( rules, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> key, value </span>) </span>{
+				rules[ key ] = $.validator.normalizeRule( value );
+			} );
+
+			<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">delegate</span>(<span class="hljs-params"> event </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-31" id="section-31"></a>
+</div>
+<p>Set form expando on contenteditable</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.form &amp;&amp; <span class="hljs-keyword">this</span>.hasAttribute( <span class="hljs-string">"contenteditable"</span> ) ) {
+					<span class="hljs-keyword">this</span>.form = $( <span class="hljs-keyword">this</span> ).closest( <span class="hljs-string">"form"</span> )[ <span class="hljs-number">0</span> ];
+					<span class="hljs-keyword">this</span>.name = $( <span class="hljs-keyword">this</span> ).attr( <span class="hljs-string">"name"</span> );
+				}
+
+				<span class="hljs-keyword">var</span> validator = $.data( <span class="hljs-keyword">this</span>.form, <span class="hljs-string">"validator"</span> ),
+					eventType = <span class="hljs-string">"on"</span> + event.type.replace( <span class="hljs-regexp">/^validate/</span>, <span class="hljs-string">""</span> ),
+					settings = validator.settings;
+				<span class="hljs-keyword">if</span> ( settings[ eventType ] &amp;&amp; !$( <span class="hljs-keyword">this</span> ).is( settings.ignore ) ) {
+					settings[ eventType ].call( validator, <span class="hljs-keyword">this</span>, event );
+				}
+			}
+
+			$( <span class="hljs-keyword">this</span>.currentForm )
+				.on( <span class="hljs-string">"focusin.validate focusout.validate keyup.validate"</span>,
+					<span class="hljs-string">":text, [type='password'], [type='file'], select, textarea, [type='number'], [type='search'], "</span> +
+					<span class="hljs-string">"[type='tel'], [type='url'], [type='email'], [type='datetime'], [type='date'], [type='month'], "</span> +
+					<span class="hljs-string">"[type='week'], [type='time'], [type='datetime-local'], [type='range'], [type='color'], "</span> +
+					<span class="hljs-string">"[type='radio'], [type='checkbox'], [contenteditable], [type='button']"</span>, delegate )
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-32" id="section-32"></a>
+</div>
+<p>Support: Chrome, oldIE
+&quot;select&quot; is provided as event.target when clicking a option</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				.on( <span class="hljs-string">"click.validate"</span>, <span class="hljs-string">"select, option, [type='radio'], [type='checkbox']"</span>, delegate );
+
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.invalidHandler ) {
+				$( <span class="hljs-keyword">this</span>.currentForm ).on( <span class="hljs-string">"invalid-form.validate"</span>, <span class="hljs-keyword">this</span>.settings.invalidHandler );
+			}
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-33" id="section-33"></a>
+</div>
+<p>https://jqueryvalidation.org/Validator.form/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		form: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.checkForm();
+			$.extend( <span class="hljs-keyword">this</span>.submitted, <span class="hljs-keyword">this</span>.errorMap );
+			<span class="hljs-keyword">this</span>.invalid = $.extend( {}, <span class="hljs-keyword">this</span>.errorMap );
+			<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.valid() ) {
+				$( <span class="hljs-keyword">this</span>.currentForm ).triggerHandler( <span class="hljs-string">"invalid-form"</span>, [ <span class="hljs-keyword">this</span> ] );
+			}
+			<span class="hljs-keyword">this</span>.showErrors();
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.valid();
+		},
+
+		<span class="hljs-attr">checkForm</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.prepareForm();
+			<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, elements = ( <span class="hljs-keyword">this</span>.currentElements = <span class="hljs-keyword">this</span>.elements() ); elements[ i ]; i++ ) {
+				<span class="hljs-keyword">this</span>.check( elements[ i ] );
+			}
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.valid();
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-34" id="section-34"></a>
+</div>
+<p>https://jqueryvalidation.org/Validator.element/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		element: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">var</span> cleanElement = <span class="hljs-keyword">this</span>.clean( element ),
+				checkElement = <span class="hljs-keyword">this</span>.validationTargetFor( cleanElement ),
+				v = <span class="hljs-keyword">this</span>,
+				result = <span class="hljs-literal">true</span>,
+				rs, group;
+
+			<span class="hljs-keyword">if</span> ( checkElement === <span class="hljs-literal">undefined</span> ) {
+				<span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.invalid[ cleanElement.name ];
+			} <span class="hljs-keyword">else</span> {
+				<span class="hljs-keyword">this</span>.prepareElement( checkElement );
+				<span class="hljs-keyword">this</span>.currentElements = $( checkElement );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-35" id="section-35"></a>
+</div>
+<p>If this element is grouped, then validate all group elements already
+containing a value</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				group = <span class="hljs-keyword">this</span>.groups[ checkElement.name ];
+				<span class="hljs-keyword">if</span> ( group ) {
+					$.each( <span class="hljs-keyword">this</span>.groups, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> name, testgroup </span>) </span>{
+						<span class="hljs-keyword">if</span> ( testgroup === group &amp;&amp; name !== checkElement.name ) {
+							cleanElement = v.validationTargetFor( v.clean( v.findByName( name ) ) );
+							<span class="hljs-keyword">if</span> ( cleanElement &amp;&amp; cleanElement.name <span class="hljs-keyword">in</span> v.invalid ) {
+								v.currentElements.push( cleanElement );
+								result = v.check( cleanElement ) &amp;&amp; result;
+							}
+						}
+					} );
+				}
+
+				rs = <span class="hljs-keyword">this</span>.check( checkElement ) !== <span class="hljs-literal">false</span>;
+				result = result &amp;&amp; rs;
+				<span class="hljs-keyword">if</span> ( rs ) {
+					<span class="hljs-keyword">this</span>.invalid[ checkElement.name ] = <span class="hljs-literal">false</span>;
+				} <span class="hljs-keyword">else</span> {
+					<span class="hljs-keyword">this</span>.invalid[ checkElement.name ] = <span class="hljs-literal">true</span>;
+				}
+
+				<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.numberOfInvalids() ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-36" id="section-36"></a>
+</div>
+<p>Hide error containers on last error</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					<span class="hljs-keyword">this</span>.toHide = <span class="hljs-keyword">this</span>.toHide.add( <span class="hljs-keyword">this</span>.containers );
+				}
+				<span class="hljs-keyword">this</span>.showErrors();
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-37" id="section-37"></a>
+</div>
+<p>Add aria-invalid status for screen readers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				$( element ).attr( <span class="hljs-string">"aria-invalid"</span>, !rs );
+			}
+
+			<span class="hljs-keyword">return</span> result;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-38" id="section-38"></a>
+</div>
+<p>https://jqueryvalidation.org/Validator.showErrors/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		showErrors: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> errors </span>) </span>{
+			<span class="hljs-keyword">if</span> ( errors ) {
+				<span class="hljs-keyword">var</span> validator = <span class="hljs-keyword">this</span>;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-39" id="section-39"></a>
+</div>
+<p>Add items to error list and map</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				$.extend( <span class="hljs-keyword">this</span>.errorMap, errors );
+				<span class="hljs-keyword">this</span>.errorList = $.map( <span class="hljs-keyword">this</span>.errorMap, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> message, name </span>) </span>{
+					<span class="hljs-keyword">return</span> {
+						<span class="hljs-attr">message</span>: message,
+						<span class="hljs-attr">element</span>: validator.findByName( name )[ <span class="hljs-number">0</span> ]
+					};
+				} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-40" id="section-40"></a>
+</div>
+<p>Remove items from success list</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">this</span>.successList = $.grep( <span class="hljs-keyword">this</span>.successList, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+					<span class="hljs-keyword">return</span> !( element.name <span class="hljs-keyword">in</span> errors );
+				} );
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.showErrors ) {
+				<span class="hljs-keyword">this</span>.settings.showErrors.call( <span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.errorMap, <span class="hljs-keyword">this</span>.errorList );
+			} <span class="hljs-keyword">else</span> {
+				<span class="hljs-keyword">this</span>.defaultShowErrors();
+			}
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-41" id="section-41"></a>
+</div>
+<p>https://jqueryvalidation.org/Validator.resetForm/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		resetForm: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">if</span> ( $.fn.resetForm ) {
+				$( <span class="hljs-keyword">this</span>.currentForm ).resetForm();
+			}
+			<span class="hljs-keyword">this</span>.invalid = {};
+			<span class="hljs-keyword">this</span>.submitted = {};
+			<span class="hljs-keyword">this</span>.prepareForm();
+			<span class="hljs-keyword">this</span>.hideErrors();
+			<span class="hljs-keyword">var</span> elements = <span class="hljs-keyword">this</span>.elements()
+				.removeData( <span class="hljs-string">"previousValue"</span> )
+				.removeAttr( <span class="hljs-string">"aria-invalid"</span> );
+
+			<span class="hljs-keyword">this</span>.resetElements( elements );
+		},
+
+		<span class="hljs-attr">resetElements</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> elements </span>) </span>{
+			<span class="hljs-keyword">var</span> i;
+
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.unhighlight ) {
+				<span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; elements[ i ]; i++ ) {
+					<span class="hljs-keyword">this</span>.settings.unhighlight.call( <span class="hljs-keyword">this</span>, elements[ i ],
+						<span class="hljs-keyword">this</span>.settings.errorClass, <span class="hljs-string">""</span> );
+					<span class="hljs-keyword">this</span>.findByName( elements[ i ].name ).removeClass( <span class="hljs-keyword">this</span>.settings.validClass );
+				}
+			} <span class="hljs-keyword">else</span> {
+				elements
+					.removeClass( <span class="hljs-keyword">this</span>.settings.errorClass )
+					.removeClass( <span class="hljs-keyword">this</span>.settings.validClass );
+			}
+		},
+
+		<span class="hljs-attr">numberOfInvalids</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.objectLength( <span class="hljs-keyword">this</span>.invalid );
+		},
+
+		<span class="hljs-attr">objectLength</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> obj </span>) </span>{
+			<span class="hljs-comment">/* jshint unused: false */</span>
+			<span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>,
+				i;
+			<span class="hljs-keyword">for</span> ( i <span class="hljs-keyword">in</span> obj ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-42" id="section-42"></a>
+</div>
+<p>This check allows counting elements with empty error
+message as invalid elements</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( obj[ i ] !== <span class="hljs-literal">undefined</span> &amp;&amp; obj[ i ] !== <span class="hljs-literal">null</span> &amp;&amp; obj[ i ] !== <span class="hljs-literal">false</span> ) {
+					count++;
+				}
+			}
+			<span class="hljs-keyword">return</span> count;
+		},
+
+		<span class="hljs-attr">hideErrors</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.hideThese( <span class="hljs-keyword">this</span>.toHide );
+		},
+
+		<span class="hljs-attr">hideThese</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> errors </span>) </span>{
+			errors.not( <span class="hljs-keyword">this</span>.containers ).text( <span class="hljs-string">""</span> );
+			<span class="hljs-keyword">this</span>.addWrapper( errors ).hide();
+		},
+
+		<span class="hljs-attr">valid</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.size() === <span class="hljs-number">0</span>;
+		},
+
+		<span class="hljs-attr">size</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.errorList.length;
+		},
+
+		<span class="hljs-attr">focusInvalid</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.focusInvalid ) {
+				<span class="hljs-keyword">try</span> {
+					$( <span class="hljs-keyword">this</span>.findLastActive() || <span class="hljs-keyword">this</span>.errorList.length &amp;&amp; <span class="hljs-keyword">this</span>.errorList[ <span class="hljs-number">0</span> ].element || [] )
+					.filter( <span class="hljs-string">":visible"</span> )
+					.focus()
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-43" id="section-43"></a>
+</div>
+<p>Manually trigger focusin event; without it, focusin handler isn't called, findLastActive won't have anything to find</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					.trigger( <span class="hljs-string">"focusin"</span> );
+				} <span class="hljs-keyword">catch</span> ( e ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-44" id="section-44"></a>
+</div>
+<p>Ignore IE throwing errors when focusing hidden elements</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				}
+			}
+		},
+
+		<span class="hljs-attr">findLastActive</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> lastActive = <span class="hljs-keyword">this</span>.lastActive;
+			<span class="hljs-keyword">return</span> lastActive &amp;&amp; $.grep( <span class="hljs-keyword">this</span>.errorList, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> n </span>) </span>{
+				<span class="hljs-keyword">return</span> n.element.name === lastActive.name;
+			} ).length === <span class="hljs-number">1</span> &amp;&amp; lastActive;
+		},
+
+		<span class="hljs-attr">elements</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> validator = <span class="hljs-keyword">this</span>,
+				rulesCache = {};
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-45" id="section-45"></a>
+</div>
+<p>Select all valid inputs inside the form (no submit or reset buttons)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">return</span> $( <span class="hljs-keyword">this</span>.currentForm )
+			.find( <span class="hljs-string">"input, select, textarea, [contenteditable]"</span> )
+			.not( <span class="hljs-string">":submit, :reset, :image, :disabled"</span> )
+			.not( <span class="hljs-keyword">this</span>.settings.ignore )
+			.filter( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+				<span class="hljs-keyword">var</span> name = <span class="hljs-keyword">this</span>.name || $( <span class="hljs-keyword">this</span> ).attr( <span class="hljs-string">"name"</span> ); <span class="hljs-comment">// For contenteditable</span>
+				<span class="hljs-keyword">if</span> ( !name &amp;&amp; validator.settings.debug &amp;&amp; <span class="hljs-built_in">window</span>.console ) {
+					<span class="hljs-built_in">console</span>.error( <span class="hljs-string">"%o has no name assigned"</span>, <span class="hljs-keyword">this</span> );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-46" id="section-46"></a>
+</div>
+<p>Set form expando on contenteditable</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.hasAttribute( <span class="hljs-string">"contenteditable"</span> ) ) {
+					<span class="hljs-keyword">this</span>.form = $( <span class="hljs-keyword">this</span> ).closest( <span class="hljs-string">"form"</span> )[ <span class="hljs-number">0</span> ];
+					<span class="hljs-keyword">this</span>.name = name;
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-47" id="section-47"></a>
+</div>
+<p>Select only the first element for each name, and only those with rules specified</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( name <span class="hljs-keyword">in</span> rulesCache || !validator.objectLength( $( <span class="hljs-keyword">this</span> ).rules() ) ) {
+					<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+				}
+
+				rulesCache[ name ] = <span class="hljs-literal">true</span>;
+				<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+			} );
+		},
+
+		<span class="hljs-attr">clean</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> selector </span>) </span>{
+			<span class="hljs-keyword">return</span> $( selector )[ <span class="hljs-number">0</span> ];
+		},
+
+		<span class="hljs-attr">errors</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> errorClass = <span class="hljs-keyword">this</span>.settings.errorClass.split( <span class="hljs-string">" "</span> ).join( <span class="hljs-string">"."</span> );
+			<span class="hljs-keyword">return</span> $( <span class="hljs-keyword">this</span>.settings.errorElement + <span class="hljs-string">"."</span> + errorClass, <span class="hljs-keyword">this</span>.errorContext );
+		},
+
+		<span class="hljs-attr">resetInternals</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.successList = [];
+			<span class="hljs-keyword">this</span>.errorList = [];
+			<span class="hljs-keyword">this</span>.errorMap = {};
+			<span class="hljs-keyword">this</span>.toShow = $( [] );
+			<span class="hljs-keyword">this</span>.toHide = $( [] );
+		},
+
+		<span class="hljs-attr">reset</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.resetInternals();
+			<span class="hljs-keyword">this</span>.currentElements = $( [] );
+		},
+
+		<span class="hljs-attr">prepareForm</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.reset();
+			<span class="hljs-keyword">this</span>.toHide = <span class="hljs-keyword">this</span>.errors().add( <span class="hljs-keyword">this</span>.containers );
+		},
+
+		<span class="hljs-attr">prepareElement</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">this</span>.reset();
+			<span class="hljs-keyword">this</span>.toHide = <span class="hljs-keyword">this</span>.errorsFor( element );
+		},
+
+		<span class="hljs-attr">elementValue</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">var</span> $element = $( element ),
+				type = element.type,
+				val, idx;
+
+			<span class="hljs-keyword">if</span> ( type === <span class="hljs-string">"radio"</span> || type === <span class="hljs-string">"checkbox"</span> ) {
+				<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.findByName( element.name ).filter( <span class="hljs-string">":checked"</span> ).val();
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( type === <span class="hljs-string">"number"</span> &amp;&amp; <span class="hljs-keyword">typeof</span> element.validity !== <span class="hljs-string">"undefined"</span> ) {
+				<span class="hljs-keyword">return</span> element.validity.badInput ? <span class="hljs-string">"NaN"</span> : $element.val();
+			}
+
+			<span class="hljs-keyword">if</span> ( element.hasAttribute( <span class="hljs-string">"contenteditable"</span> ) ) {
+				val = $element.text();
+			} <span class="hljs-keyword">else</span> {
+				val = $element.val();
+			}
+
+			<span class="hljs-keyword">if</span> ( type === <span class="hljs-string">"file"</span> ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-48" id="section-48"></a>
+</div>
+<p>Modern browser (chrome &amp; safari)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( val.substr( <span class="hljs-number">0</span>, <span class="hljs-number">12</span> ) === <span class="hljs-string">"C:\\fakepath\\"</span> ) {
+					<span class="hljs-keyword">return</span> val.substr( <span class="hljs-number">12</span> );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-49" id="section-49"></a>
+</div>
+<p>Legacy browsers
+Unix-based path</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				idx = val.lastIndexOf( <span class="hljs-string">"/"</span> );
+				<span class="hljs-keyword">if</span> ( idx &gt;= <span class="hljs-number">0</span> ) {
+					<span class="hljs-keyword">return</span> val.substr( idx + <span class="hljs-number">1</span> );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-50" id="section-50"></a>
+</div>
+<p>Windows-based path</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				idx = val.lastIndexOf( <span class="hljs-string">"\\"</span> );
+				<span class="hljs-keyword">if</span> ( idx &gt;= <span class="hljs-number">0</span> ) {
+					<span class="hljs-keyword">return</span> val.substr( idx + <span class="hljs-number">1</span> );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-51" id="section-51"></a>
+</div>
+<p>Just the file name</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">return</span> val;
+			}
+
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> val === <span class="hljs-string">"string"</span> ) {
+				<span class="hljs-keyword">return</span> val.replace( <span class="hljs-regexp">/\r/g</span>, <span class="hljs-string">""</span> );
+			}
+			<span class="hljs-keyword">return</span> val;
+		},
+
+		<span class="hljs-attr">check</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			element = <span class="hljs-keyword">this</span>.validationTargetFor( <span class="hljs-keyword">this</span>.clean( element ) );
+
+			<span class="hljs-keyword">var</span> rules = $( element ).rules(),
+				rulesCount = $.map( rules, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> n, i </span>) </span>{
+					<span class="hljs-keyword">return</span> i;
+				} ).length,
+				dependencyMismatch = <span class="hljs-literal">false</span>,
+				val = <span class="hljs-keyword">this</span>.elementValue( element ),
+				result, method, rule, normalizer;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-52" id="section-52"></a>
+</div>
+<p>Prioritize the local normalizer defined for this element over the global one
+if the former exists, otherwise user the global one in case it exists.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> rules.normalizer === <span class="hljs-string">"function"</span> ) {
+				normalizer = rules.normalizer;
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (	<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.settings.normalizer === <span class="hljs-string">"function"</span> ) {
+				normalizer = <span class="hljs-keyword">this</span>.settings.normalizer;
+			}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-53" id="section-53"></a>
+</div>
+<p>If normalizer is defined, then call it to retreive the changed value instead
+of using the real one.
+Note that <code>this</code> in the normalizer is <code>element</code>.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( normalizer ) {
+				val = normalizer.call( element, val );
+
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> val !== <span class="hljs-string">"string"</span> ) {
+					<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>( <span class="hljs-string">"The normalizer should return a string value."</span> );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-54" id="section-54"></a>
+</div>
+<p>Delete the normalizer from rules to avoid treating it as a pre-defined method.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">delete</span> rules.normalizer;
+			}
+
+			<span class="hljs-keyword">for</span> ( method <span class="hljs-keyword">in</span> rules ) {
+				rule = { <span class="hljs-attr">method</span>: method, <span class="hljs-attr">parameters</span>: rules[ method ] };
+				<span class="hljs-keyword">try</span> {
+					result = $.validator.methods[ method ].call( <span class="hljs-keyword">this</span>, val, element, rule.parameters );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-55" id="section-55"></a>
+</div>
+<p>If a method indicates that the field is optional and therefore valid,
+don't mark it as valid when there are no other rules</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					<span class="hljs-keyword">if</span> ( result === <span class="hljs-string">"dependency-mismatch"</span> &amp;&amp; rulesCount === <span class="hljs-number">1</span> ) {
+						dependencyMismatch = <span class="hljs-literal">true</span>;
+						<span class="hljs-keyword">continue</span>;
+					}
+					dependencyMismatch = <span class="hljs-literal">false</span>;
+
+					<span class="hljs-keyword">if</span> ( result === <span class="hljs-string">"pending"</span> ) {
+						<span class="hljs-keyword">this</span>.toHide = <span class="hljs-keyword">this</span>.toHide.not( <span class="hljs-keyword">this</span>.errorsFor( element ) );
+						<span class="hljs-keyword">return</span>;
+					}
+
+					<span class="hljs-keyword">if</span> ( !result ) {
+						<span class="hljs-keyword">this</span>.formatAndAdd( element, rule );
+						<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+					}
+				} <span class="hljs-keyword">catch</span> ( e ) {
+					<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.debug &amp;&amp; <span class="hljs-built_in">window</span>.console ) {
+						<span class="hljs-built_in">console</span>.log( <span class="hljs-string">"Exception occurred when checking element "</span> + element.id + <span class="hljs-string">", check the '"</span> + rule.method + <span class="hljs-string">"' method."</span>, e );
+					}
+					<span class="hljs-keyword">if</span> ( e <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">TypeError</span> ) {
+						e.message += <span class="hljs-string">".  Exception occurred when checking element "</span> + element.id + <span class="hljs-string">", check the '"</span> + rule.method + <span class="hljs-string">"' method."</span>;
+					}
+
+					<span class="hljs-keyword">throw</span> e;
+				}
+			}
+			<span class="hljs-keyword">if</span> ( dependencyMismatch ) {
+				<span class="hljs-keyword">return</span>;
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.objectLength( rules ) ) {
+				<span class="hljs-keyword">this</span>.successList.push( element );
+			}
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-56" id="section-56"></a>
+</div>
+<p>Return the custom message for the given element and validation method
+specified in the element's HTML5 data attribute
+return the generic message if present and no method specific message is present</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		customDataMessage: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, method </span>) </span>{
+			<span class="hljs-keyword">return</span> $( element ).data( <span class="hljs-string">"msg"</span> + method.charAt( <span class="hljs-number">0</span> ).toUpperCase() +
+				method.substring( <span class="hljs-number">1</span> ).toLowerCase() ) || $( element ).data( <span class="hljs-string">"msg"</span> );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-57" id="section-57"></a>
+</div>
+<p>Return the custom message for the given element name and validation method</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		customMessage: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> name, method </span>) </span>{
+			<span class="hljs-keyword">var</span> m = <span class="hljs-keyword">this</span>.settings.messages[ name ];
+			<span class="hljs-keyword">return</span> m &amp;&amp; ( m.constructor === <span class="hljs-built_in">String</span> ? m : m[ method ] );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-58" id="section-58"></a>
+</div>
+<p>Return the first defined argument, allowing empty strings</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		findDefined: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">arguments</span>.length; i++ ) {
+				<span class="hljs-keyword">if</span> ( <span class="hljs-built_in">arguments</span>[ i ] !== <span class="hljs-literal">undefined</span> ) {
+					<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>[ i ];
+				}
+			}
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-59" id="section-59"></a>
+</div>
+<p>The second parameter 'rule' used to be a string, and extended to an object literal
+of the following form:
+rule = {
+method: &quot;method name&quot;,
+parameters: &quot;the given method parameters&quot;
+}</p>
+<p>The old behavior still supported, kept to maintain backward compatibility with
+old code, and will be removed in the next major release.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		defaultMessage: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, rule </span>) </span>{
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> rule === <span class="hljs-string">"string"</span> ) {
+				rule = { <span class="hljs-attr">method</span>: rule };
+			}
+
+			<span class="hljs-keyword">var</span> message = <span class="hljs-keyword">this</span>.findDefined(
+					<span class="hljs-keyword">this</span>.customMessage( element.name, rule.method ),
+					<span class="hljs-keyword">this</span>.customDataMessage( element, rule.method ),
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-60" id="section-60"></a>
+</div>
+<p>'title' is never undefined, so handle empty string as undefined</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					!<span class="hljs-keyword">this</span>.settings.ignoreTitle &amp;&amp; element.title || <span class="hljs-literal">undefined</span>,
+					$.validator.messages[ rule.method ],
+					<span class="hljs-string">"&lt;strong&gt;Warning: No message defined for "</span> + element.name + <span class="hljs-string">"&lt;/strong&gt;"</span>
+				),
+				theregex = <span class="hljs-regexp">/\$?\{(\d+)\}/g</span>;
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> message === <span class="hljs-string">"function"</span> ) {
+				message = message.call( <span class="hljs-keyword">this</span>, rule.parameters, element );
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( theregex.test( message ) ) {
+				message = $.validator.format( message.replace( theregex, <span class="hljs-string">"{$1}"</span> ), rule.parameters );
+			}
+
+			<span class="hljs-keyword">return</span> message;
+		},
+
+		<span class="hljs-attr">formatAndAdd</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, rule </span>) </span>{
+			<span class="hljs-keyword">var</span> message = <span class="hljs-keyword">this</span>.defaultMessage( element, rule );
+
+			<span class="hljs-keyword">this</span>.errorList.push( {
+				<span class="hljs-attr">message</span>: message,
+				<span class="hljs-attr">element</span>: element,
+				<span class="hljs-attr">method</span>: rule.method
+			} );
+
+			<span class="hljs-keyword">this</span>.errorMap[ element.name ] = message;
+			<span class="hljs-keyword">this</span>.submitted[ element.name ] = message;
+		},
+
+		<span class="hljs-attr">addWrapper</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> toToggle </span>) </span>{
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.wrapper ) {
+				toToggle = toToggle.add( toToggle.parent( <span class="hljs-keyword">this</span>.settings.wrapper ) );
+			}
+			<span class="hljs-keyword">return</span> toToggle;
+		},
+
+		<span class="hljs-attr">defaultShowErrors</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> i, elements, error;
+			<span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; <span class="hljs-keyword">this</span>.errorList[ i ]; i++ ) {
+				error = <span class="hljs-keyword">this</span>.errorList[ i ];
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.highlight ) {
+					<span class="hljs-keyword">this</span>.settings.highlight.call( <span class="hljs-keyword">this</span>, error.element, <span class="hljs-keyword">this</span>.settings.errorClass, <span class="hljs-keyword">this</span>.settings.validClass );
+				}
+				<span class="hljs-keyword">this</span>.showLabel( error.element, error.message );
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.errorList.length ) {
+				<span class="hljs-keyword">this</span>.toShow = <span class="hljs-keyword">this</span>.toShow.add( <span class="hljs-keyword">this</span>.containers );
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.success ) {
+				<span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; <span class="hljs-keyword">this</span>.successList[ i ]; i++ ) {
+					<span class="hljs-keyword">this</span>.showLabel( <span class="hljs-keyword">this</span>.successList[ i ] );
+				}
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.unhighlight ) {
+				<span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>, elements = <span class="hljs-keyword">this</span>.validElements(); elements[ i ]; i++ ) {
+					<span class="hljs-keyword">this</span>.settings.unhighlight.call( <span class="hljs-keyword">this</span>, elements[ i ], <span class="hljs-keyword">this</span>.settings.errorClass, <span class="hljs-keyword">this</span>.settings.validClass );
+				}
+			}
+			<span class="hljs-keyword">this</span>.toHide = <span class="hljs-keyword">this</span>.toHide.not( <span class="hljs-keyword">this</span>.toShow );
+			<span class="hljs-keyword">this</span>.hideErrors();
+			<span class="hljs-keyword">this</span>.addWrapper( <span class="hljs-keyword">this</span>.toShow ).show();
+		},
+
+		<span class="hljs-attr">validElements</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentElements.not( <span class="hljs-keyword">this</span>.invalidElements() );
+		},
+
+		<span class="hljs-attr">invalidElements</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">return</span> $( <span class="hljs-keyword">this</span>.errorList ).map( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+				<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.element;
+			} );
+		},
+
+		<span class="hljs-attr">showLabel</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, message </span>) </span>{
+			<span class="hljs-keyword">var</span> place, group, errorID, v,
+				error = <span class="hljs-keyword">this</span>.errorsFor( element ),
+				elementID = <span class="hljs-keyword">this</span>.idOrName( element ),
+				describedBy = $( element ).attr( <span class="hljs-string">"aria-describedby"</span> );
+
+			<span class="hljs-keyword">if</span> ( error.length ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-61" id="section-61"></a>
+</div>
+<p>Refresh error/success class</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				error.removeClass( <span class="hljs-keyword">this</span>.settings.validClass ).addClass( <span class="hljs-keyword">this</span>.settings.errorClass );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-62" id="section-62"></a>
+</div>
+<p>Replace message on existing label</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				error.html( message );
+			} <span class="hljs-keyword">else</span> {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-63" id="section-63"></a>
+</div>
+<p>Create error element</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				error = $( <span class="hljs-string">"&lt;"</span> + <span class="hljs-keyword">this</span>.settings.errorElement + <span class="hljs-string">"&gt;"</span> )
+					.attr( <span class="hljs-string">"id"</span>, elementID + <span class="hljs-string">"-error"</span> )
+					.addClass( <span class="hljs-keyword">this</span>.settings.errorClass )
+					.html( message || <span class="hljs-string">""</span> );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-64" id="section-64"></a>
+</div>
+<p>Maintain reference to the element to be placed into the DOM</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				place = error;
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.wrapper ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-65" id="section-65"></a>
+</div>
+<p>Make sure the element is visible, even in IE
+actually showing the wrapped element is handled elsewhere</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					place = error.hide().show().wrap( <span class="hljs-string">"&lt;"</span> + <span class="hljs-keyword">this</span>.settings.wrapper + <span class="hljs-string">"/&gt;"</span> ).parent();
+				}
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.labelContainer.length ) {
+					<span class="hljs-keyword">this</span>.labelContainer.append( place );
+				} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.errorPlacement ) {
+					<span class="hljs-keyword">this</span>.settings.errorPlacement.call( <span class="hljs-keyword">this</span>, place, $( element ) );
+				} <span class="hljs-keyword">else</span> {
+					place.insertAfter( element );
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-66" id="section-66"></a>
+</div>
+<p>Link error back to the element</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( error.is( <span class="hljs-string">"label"</span> ) ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-67" id="section-67"></a>
+</div>
+<p>If the error is a label, then associate using 'for'</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					error.attr( <span class="hljs-string">"for"</span>, elementID );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-68" id="section-68"></a>
+</div>
+<p>If the element is not a child of an associated label, then it's necessary
+to explicitly apply aria-describedby</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( error.parents( <span class="hljs-string">"label[for='"</span> + <span class="hljs-keyword">this</span>.escapeCssMeta( elementID ) + <span class="hljs-string">"']"</span> ).length === <span class="hljs-number">0</span> ) {
+					errorID = error.attr( <span class="hljs-string">"id"</span> );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-69" id="section-69"></a>
+</div>
+<p>Respect existing non-error aria-describedby</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					<span class="hljs-keyword">if</span> ( !describedBy ) {
+						describedBy = errorID;
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( !describedBy.match( <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>( <span class="hljs-string">"\\b"</span> + <span class="hljs-keyword">this</span>.escapeCssMeta( errorID ) + <span class="hljs-string">"\\b"</span> ) ) ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-70" id="section-70"></a>
+</div>
+<p>Add to end of list if not already present</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">						describedBy += <span class="hljs-string">" "</span> + errorID;
+					}
+					$( element ).attr( <span class="hljs-string">"aria-describedby"</span>, describedBy );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-71" id="section-71"></a>
+</div>
+<p>If this element is grouped, then assign to all elements in the same group</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					group = <span class="hljs-keyword">this</span>.groups[ element.name ];
+					<span class="hljs-keyword">if</span> ( group ) {
+						v = <span class="hljs-keyword">this</span>;
+						$.each( v.groups, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> name, testgroup </span>) </span>{
+							<span class="hljs-keyword">if</span> ( testgroup === group ) {
+								$( <span class="hljs-string">"[name='"</span> + v.escapeCssMeta( name ) + <span class="hljs-string">"']"</span>, v.currentForm )
+									.attr( <span class="hljs-string">"aria-describedby"</span>, error.attr( <span class="hljs-string">"id"</span> ) );
+							}
+						} );
+					}
+				}
+			}
+			<span class="hljs-keyword">if</span> ( !message &amp;&amp; <span class="hljs-keyword">this</span>.settings.success ) {
+				error.text( <span class="hljs-string">""</span> );
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.settings.success === <span class="hljs-string">"string"</span> ) {
+					error.addClass( <span class="hljs-keyword">this</span>.settings.success );
+				} <span class="hljs-keyword">else</span> {
+					<span class="hljs-keyword">this</span>.settings.success( error, element );
+				}
+			}
+			<span class="hljs-keyword">this</span>.toShow = <span class="hljs-keyword">this</span>.toShow.add( error );
+		},
+
+		<span class="hljs-attr">errorsFor</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">var</span> name = <span class="hljs-keyword">this</span>.escapeCssMeta( <span class="hljs-keyword">this</span>.idOrName( element ) ),
+				describer = $( element ).attr( <span class="hljs-string">"aria-describedby"</span> ),
+				selector = <span class="hljs-string">"label[for='"</span> + name + <span class="hljs-string">"'], label[for='"</span> + name + <span class="hljs-string">"'] *"</span>;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-72" id="section-72"></a>
+</div>
+<p>'aria-describedby' should directly reference the error element</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( describer ) {
+				selector = selector + <span class="hljs-string">", #"</span> + <span class="hljs-keyword">this</span>.escapeCssMeta( describer )
+					.replace( <span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">", #"</span> );
+			}
+
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+				.errors()
+				.filter( selector );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-73" id="section-73"></a>
+</div>
+<p>See https://api.jquery.com/category/selectors/, for CSS
+meta-characters that should be escaped in order to be used with JQuery
+as a literal part of a name/id or any selector.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		escapeCssMeta: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> string </span>) </span>{
+			<span class="hljs-keyword">return</span> string.replace( <span class="hljs-regexp">/([\\!"#$%&amp;'()*+,./:;&lt;=&gt;?@\[\]^`{|}~])/g</span>, <span class="hljs-string">"\\$1"</span> );
+		},
+
+		<span class="hljs-attr">idOrName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.groups[ element.name ] || ( <span class="hljs-keyword">this</span>.checkable( element ) ? element.name : element.id || element.name );
+		},
+
+		<span class="hljs-attr">validationTargetFor</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-74" id="section-74"></a>
+</div>
+<p>If radio/checkbox, validate first element in group instead</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.checkable( element ) ) {
+				element = <span class="hljs-keyword">this</span>.findByName( element.name );
+			}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-75" id="section-75"></a>
+</div>
+<p>Always apply ignore filter</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">return</span> $( element ).not( <span class="hljs-keyword">this</span>.settings.ignore )[ <span class="hljs-number">0</span> ];
+		},
+
+		<span class="hljs-attr">checkable</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">return</span> ( <span class="hljs-regexp">/radio|checkbox/i</span> ).test( element.type );
+		},
+
+		<span class="hljs-attr">findByName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> name </span>) </span>{
+			<span class="hljs-keyword">return</span> $( <span class="hljs-keyword">this</span>.currentForm ).find( <span class="hljs-string">"[name='"</span> + <span class="hljs-keyword">this</span>.escapeCssMeta( name ) + <span class="hljs-string">"']"</span> );
+		},
+
+		<span class="hljs-attr">getLength</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+			<span class="hljs-keyword">switch</span> ( element.nodeName.toLowerCase() ) {
+			<span class="hljs-keyword">case</span> <span class="hljs-string">"select"</span>:
+				<span class="hljs-keyword">return</span> $( <span class="hljs-string">"option:selected"</span>, element ).length;
+			<span class="hljs-keyword">case</span> <span class="hljs-string">"input"</span>:
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.checkable( element ) ) {
+					<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.findByName( element.name ).filter( <span class="hljs-string">":checked"</span> ).length;
+				}
+			}
+			<span class="hljs-keyword">return</span> value.length;
+		},
+
+		<span class="hljs-attr">depend</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> param, element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dependTypes[ <span class="hljs-keyword">typeof</span> param ] ? <span class="hljs-keyword">this</span>.dependTypes[ <span class="hljs-keyword">typeof</span> param ]( param, element ) : <span class="hljs-literal">true</span>;
+		},
+
+		<span class="hljs-attr">dependTypes</span>: {
+			<span class="hljs-string">"boolean"</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> param </span>) </span>{
+				<span class="hljs-keyword">return</span> param;
+			},
+			<span class="hljs-string">"string"</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> param, element </span>) </span>{
+				<span class="hljs-keyword">return</span> !!$( param, element.form ).length;
+			},
+			<span class="hljs-string">"function"</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> param, element </span>) </span>{
+				<span class="hljs-keyword">return</span> param( element );
+			}
+		},
+
+		<span class="hljs-attr">optional</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">var</span> val = <span class="hljs-keyword">this</span>.elementValue( element );
+			<span class="hljs-keyword">return</span> !$.validator.methods.required.call( <span class="hljs-keyword">this</span>, val, element ) &amp;&amp; <span class="hljs-string">"dependency-mismatch"</span>;
+		},
+
+		<span class="hljs-attr">startRequest</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+			<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.pending[ element.name ] ) {
+				<span class="hljs-keyword">this</span>.pendingRequest++;
+				$( element ).addClass( <span class="hljs-keyword">this</span>.settings.pendingClass );
+				<span class="hljs-keyword">this</span>.pending[ element.name ] = <span class="hljs-literal">true</span>;
+			}
+		},
+
+		<span class="hljs-attr">stopRequest</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, valid </span>) </span>{
+			<span class="hljs-keyword">this</span>.pendingRequest--;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-76" id="section-76"></a>
+</div>
+<p>Sometimes synchronization fails, make sure pendingRequest is never &lt; 0</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.pendingRequest &lt; <span class="hljs-number">0</span> ) {
+				<span class="hljs-keyword">this</span>.pendingRequest = <span class="hljs-number">0</span>;
+			}
+			<span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.pending[ element.name ];
+			$( element ).removeClass( <span class="hljs-keyword">this</span>.settings.pendingClass );
+			<span class="hljs-keyword">if</span> ( valid &amp;&amp; <span class="hljs-keyword">this</span>.pendingRequest === <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>.formSubmitted &amp;&amp; <span class="hljs-keyword">this</span>.form() ) {
+				$( <span class="hljs-keyword">this</span>.currentForm ).submit();
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-77" id="section-77"></a>
+</div>
+<p>Remove the hidden input that was used as a replacement for the
+missing submit button. The hidden input is added by <code>handle()</code>
+to ensure that the value of the used submit button is passed on
+for scripted submits triggered by this method</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.submitButton ) {
+					$( <span class="hljs-string">"input:hidden[name='"</span> + <span class="hljs-keyword">this</span>.submitButton.name + <span class="hljs-string">"']"</span>, <span class="hljs-keyword">this</span>.currentForm ).remove();
+				}
+
+				<span class="hljs-keyword">this</span>.formSubmitted = <span class="hljs-literal">false</span>;
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( !valid &amp;&amp; <span class="hljs-keyword">this</span>.pendingRequest === <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>.formSubmitted ) {
+				$( <span class="hljs-keyword">this</span>.currentForm ).triggerHandler( <span class="hljs-string">"invalid-form"</span>, [ <span class="hljs-keyword">this</span> ] );
+				<span class="hljs-keyword">this</span>.formSubmitted = <span class="hljs-literal">false</span>;
+			}
+		},
+
+		<span class="hljs-attr">previousValue</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element, method </span>) </span>{
+			method = <span class="hljs-keyword">typeof</span> method === <span class="hljs-string">"string"</span> &amp;&amp; method || <span class="hljs-string">"remote"</span>;
+
+			<span class="hljs-keyword">return</span> $.data( element, <span class="hljs-string">"previousValue"</span> ) || $.data( element, <span class="hljs-string">"previousValue"</span>, {
+				<span class="hljs-attr">old</span>: <span class="hljs-literal">null</span>,
+				<span class="hljs-attr">valid</span>: <span class="hljs-literal">true</span>,
+				<span class="hljs-attr">message</span>: <span class="hljs-keyword">this</span>.defaultMessage( element, { <span class="hljs-attr">method</span>: method } )
+			} );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-78" id="section-78"></a>
+</div>
+<p>Cleans up all forms and elements, removes validator-specific events</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		destroy: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">this</span>.resetForm();
+
+			$( <span class="hljs-keyword">this</span>.currentForm )
+				.off( <span class="hljs-string">".validate"</span> )
+				.removeData( <span class="hljs-string">"validator"</span> )
+				.find( <span class="hljs-string">".validate-equalTo-blur"</span> )
+					.off( <span class="hljs-string">".validate-equalTo"</span> )
+					.removeClass( <span class="hljs-string">"validate-equalTo-blur"</span> );
+		}
+
+	},
+
+	<span class="hljs-attr">classRuleSettings</span>: {
+		<span class="hljs-attr">required</span>: { <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">email</span>: { <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">url</span>: { <span class="hljs-attr">url</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">date</span>: { <span class="hljs-attr">date</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">dateISO</span>: { <span class="hljs-attr">dateISO</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">number</span>: { <span class="hljs-attr">number</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">digits</span>: { <span class="hljs-attr">digits</span>: <span class="hljs-literal">true</span> },
+		<span class="hljs-attr">creditcard</span>: { <span class="hljs-attr">creditcard</span>: <span class="hljs-literal">true</span> }
+	},
+
+	<span class="hljs-attr">addClassRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> className, rules </span>) </span>{
+		<span class="hljs-keyword">if</span> ( className.constructor === <span class="hljs-built_in">String</span> ) {
+			<span class="hljs-keyword">this</span>.classRuleSettings[ className ] = rules;
+		} <span class="hljs-keyword">else</span> {
+			$.extend( <span class="hljs-keyword">this</span>.classRuleSettings, className );
+		}
+	},
+
+	<span class="hljs-attr">classRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+		<span class="hljs-keyword">var</span> rules = {},
+			classes = $( element ).attr( <span class="hljs-string">"class"</span> );
+
+		<span class="hljs-keyword">if</span> ( classes ) {
+			$.each( classes.split( <span class="hljs-string">" "</span> ), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+				<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span> <span class="hljs-keyword">in</span> $.validator.classRuleSettings ) {
+					$.extend( rules, $.validator.classRuleSettings[ <span class="hljs-keyword">this</span> ] );
+				}
+			} );
+		}
+		<span class="hljs-keyword">return</span> rules;
+	},
+
+	<span class="hljs-attr">normalizeAttributeRule</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> rules, type, method, value </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-79" id="section-79"></a>
+</div>
+<p>Convert the value to a number for number inputs, and for text for backwards compability
+allows type=&quot;date&quot; and others to be compared as strings</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( <span class="hljs-regexp">/min|max|step/</span>.test( method ) &amp;&amp; ( type === <span class="hljs-literal">null</span> || <span class="hljs-regexp">/number|range|text/</span>.test( type ) ) ) {
+			value = <span class="hljs-built_in">Number</span>( value );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-80" id="section-80"></a>
+</div>
+<p>Support Opera Mini, which returns NaN for undefined minlength</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( <span class="hljs-built_in">isNaN</span>( value ) ) {
+				value = <span class="hljs-literal">undefined</span>;
+			}
+		}
+
+		<span class="hljs-keyword">if</span> ( value || value === <span class="hljs-number">0</span> ) {
+			rules[ method ] = value;
+		} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( type === method &amp;&amp; type !== <span class="hljs-string">"range"</span> ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-81" id="section-81"></a>
+</div>
+<p>Exception: the jquery validate 'range' method
+does not test for the html5 'range' type</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			rules[ method ] = <span class="hljs-literal">true</span>;
+		}
+	},
+
+	<span class="hljs-attr">attributeRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+		<span class="hljs-keyword">var</span> rules = {},
+			$element = $( element ),
+			type = element.getAttribute( <span class="hljs-string">"type"</span> ),
+			method, value;
+
+		<span class="hljs-keyword">for</span> ( method <span class="hljs-keyword">in</span> $.validator.methods ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-82" id="section-82"></a>
+</div>
+<p>Support for <input required> in both html5 and older browsers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( method === <span class="hljs-string">"required"</span> ) {
+				value = element.getAttribute( method );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-83" id="section-83"></a>
+</div>
+<p>Some browsers return an empty string for the required attribute
+and non-HTML5 browsers might have required=&quot;&quot; markup</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">if</span> ( value === <span class="hljs-string">""</span> ) {
+					value = <span class="hljs-literal">true</span>;
+				}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-84" id="section-84"></a>
+</div>
+<p>Force non-HTML5 browsers to return bool</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				value = !!value;
+			} <span class="hljs-keyword">else</span> {
+				value = $element.attr( method );
+			}
+
+			<span class="hljs-keyword">this</span>.normalizeAttributeRule( rules, type, method, value );
+		}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-85" id="section-85"></a>
+</div>
+<p>'maxlength' may be returned as -1, 2147483647 ( IE ) and 524288 ( safari ) for text inputs</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		<span class="hljs-keyword">if</span> ( rules.maxlength &amp;&amp; <span class="hljs-regexp">/-1|2147483647|524288/</span>.test( rules.maxlength ) ) {
+			<span class="hljs-keyword">delete</span> rules.maxlength;
+		}
+
+		<span class="hljs-keyword">return</span> rules;
+	},
+
+	<span class="hljs-attr">dataRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+		<span class="hljs-keyword">var</span> rules = {},
+			$element = $( element ),
+			type = element.getAttribute( <span class="hljs-string">"type"</span> ),
+			method, value;
+
+		<span class="hljs-keyword">for</span> ( method <span class="hljs-keyword">in</span> $.validator.methods ) {
+			value = $element.data( <span class="hljs-string">"rule"</span> + method.charAt( <span class="hljs-number">0</span> ).toUpperCase() + method.substring( <span class="hljs-number">1</span> ).toLowerCase() );
+			<span class="hljs-keyword">this</span>.normalizeAttributeRule( rules, type, method, value );
+		}
+		<span class="hljs-keyword">return</span> rules;
+	},
+
+	<span class="hljs-attr">staticRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> element </span>) </span>{
+		<span class="hljs-keyword">var</span> rules = {},
+			validator = $.data( element.form, <span class="hljs-string">"validator"</span> );
+
+		<span class="hljs-keyword">if</span> ( validator.settings.rules ) {
+			rules = $.validator.normalizeRule( validator.settings.rules[ element.name ] ) || {};
+		}
+		<span class="hljs-keyword">return</span> rules;
+	},
+
+	<span class="hljs-attr">normalizeRules</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> rules, element </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-86" id="section-86"></a>
+</div>
+<p>Handle dependency check</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		$.each( rules, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> prop, val </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-87" id="section-87"></a>
+</div>
+<p>Ignore rule when param is explicitly false, eg. required:false</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( val === <span class="hljs-literal">false</span> ) {
+				<span class="hljs-keyword">delete</span> rules[ prop ];
+				<span class="hljs-keyword">return</span>;
+			}
+			<span class="hljs-keyword">if</span> ( val.param || val.depends ) {
+				<span class="hljs-keyword">var</span> keepRule = <span class="hljs-literal">true</span>;
+				<span class="hljs-keyword">switch</span> ( <span class="hljs-keyword">typeof</span> val.depends ) {
+				<span class="hljs-keyword">case</span> <span class="hljs-string">"string"</span>:
+					keepRule = !!$( val.depends, element.form ).length;
+					<span class="hljs-keyword">break</span>;
+				<span class="hljs-keyword">case</span> <span class="hljs-string">"function"</span>:
+					keepRule = val.depends.call( element, element );
+					<span class="hljs-keyword">break</span>;
+				}
+				<span class="hljs-keyword">if</span> ( keepRule ) {
+					rules[ prop ] = val.param !== <span class="hljs-literal">undefined</span> ? val.param : <span class="hljs-literal">true</span>;
+				} <span class="hljs-keyword">else</span> {
+					$.data( element.form, <span class="hljs-string">"validator"</span> ).resetElements( $( element ) );
+					<span class="hljs-keyword">delete</span> rules[ prop ];
+				}
+			}
+		} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-88" id="section-88"></a>
+</div>
+<p>Evaluate parameters</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		$.each( rules, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> rule, parameter </span>) </span>{
+			rules[ rule ] = $.isFunction( parameter ) &amp;&amp; rule !== <span class="hljs-string">"normalizer"</span> ? parameter( element ) : parameter;
+		} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-89" id="section-89"></a>
+</div>
+<p>Clean number parameters</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		$.each( [ <span class="hljs-string">"minlength"</span>, <span class="hljs-string">"maxlength"</span> ], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">if</span> ( rules[ <span class="hljs-keyword">this</span> ] ) {
+				rules[ <span class="hljs-keyword">this</span> ] = <span class="hljs-built_in">Number</span>( rules[ <span class="hljs-keyword">this</span> ] );
+			}
+		} );
+		$.each( [ <span class="hljs-string">"rangelength"</span>, <span class="hljs-string">"range"</span> ], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			<span class="hljs-keyword">var</span> parts;
+			<span class="hljs-keyword">if</span> ( rules[ <span class="hljs-keyword">this</span> ] ) {
+				<span class="hljs-keyword">if</span> ( $.isArray( rules[ <span class="hljs-keyword">this</span> ] ) ) {
+					rules[ <span class="hljs-keyword">this</span> ] = [ <span class="hljs-built_in">Number</span>( rules[ <span class="hljs-keyword">this</span> ][ <span class="hljs-number">0</span> ] ), <span class="hljs-built_in">Number</span>( rules[ <span class="hljs-keyword">this</span> ][ <span class="hljs-number">1</span> ] ) ];
+				} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> rules[ <span class="hljs-keyword">this</span> ] === <span class="hljs-string">"string"</span> ) {
+					parts = rules[ <span class="hljs-keyword">this</span> ].replace( <span class="hljs-regexp">/[\[\]]/g</span>, <span class="hljs-string">""</span> ).split( <span class="hljs-regexp">/[\s,]+/</span> );
+					rules[ <span class="hljs-keyword">this</span> ] = [ <span class="hljs-built_in">Number</span>( parts[ <span class="hljs-number">0</span> ] ), <span class="hljs-built_in">Number</span>( parts[ <span class="hljs-number">1</span> ] ) ];
+				}
+			}
+		} );
+
+		<span class="hljs-keyword">if</span> ( $.validator.autoCreateRanges ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-90" id="section-90"></a>
+</div>
+<p>Auto-create ranges</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( rules.min != <span class="hljs-literal">null</span> &amp;&amp; rules.max != <span class="hljs-literal">null</span> ) {
+				rules.range = [ rules.min, rules.max ];
+				<span class="hljs-keyword">delete</span> rules.min;
+				<span class="hljs-keyword">delete</span> rules.max;
+			}
+			<span class="hljs-keyword">if</span> ( rules.minlength != <span class="hljs-literal">null</span> &amp;&amp; rules.maxlength != <span class="hljs-literal">null</span> ) {
+				rules.rangelength = [ rules.minlength, rules.maxlength ];
+				<span class="hljs-keyword">delete</span> rules.minlength;
+				<span class="hljs-keyword">delete</span> rules.maxlength;
+			}
+		}
+
+		<span class="hljs-keyword">return</span> rules;
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-91" id="section-91"></a>
+</div>
+<p>Converts a simple string to a {string: true} rule, e.g., &quot;required&quot; to {required:true}</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	normalizeRule: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> data </span>) </span>{
+		<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> data === <span class="hljs-string">"string"</span> ) {
+			<span class="hljs-keyword">var</span> transformed = {};
+			$.each( data.split( <span class="hljs-regexp">/\s/</span> ), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+				transformed[ <span class="hljs-keyword">this</span> ] = <span class="hljs-literal">true</span>;
+			} );
+			data = transformed;
+		}
+		<span class="hljs-keyword">return</span> data;
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-92" id="section-92"></a>
+</div>
+<p>https://jqueryvalidation.org/jQuery.validator.addMethod/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	addMethod: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> name, method, message </span>) </span>{
+		$.validator.methods[ name ] = method;
+		$.validator.messages[ name ] = message !== <span class="hljs-literal">undefined</span> ? message : $.validator.messages[ name ];
+		<span class="hljs-keyword">if</span> ( method.length &lt; <span class="hljs-number">3</span> ) {
+			$.validator.addClassRules( name, $.validator.normalizeRule( name ) );
+		}
+	},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-93" id="section-93"></a>
+</div>
+<p>https://jqueryvalidation.org/jQuery.validator.methods/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	methods: {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-94" id="section-94"></a>
+</div>
+<p>https://jqueryvalidation.org/required-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		required: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-95" id="section-95"></a>
+</div>
+<p>Check if dependency is met</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.depend( param, element ) ) {
+				<span class="hljs-keyword">return</span> <span class="hljs-string">"dependency-mismatch"</span>;
+			}
+			<span class="hljs-keyword">if</span> ( element.nodeName.toLowerCase() === <span class="hljs-string">"select"</span> ) {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-96" id="section-96"></a>
+</div>
+<p>Could be an array for select-multiple or a string, both are fine this way</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">				<span class="hljs-keyword">var</span> val = $( element ).val();
+				<span class="hljs-keyword">return</span> val &amp;&amp; val.length &gt; <span class="hljs-number">0</span>;
+			}
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.checkable( element ) ) {
+				<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getLength( value, element ) &gt; <span class="hljs-number">0</span>;
+			}
+			<span class="hljs-keyword">return</span> value.length &gt; <span class="hljs-number">0</span>;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-97" id="section-97"></a>
+</div>
+<p>https://jqueryvalidation.org/email-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		email: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-98" id="section-98"></a>
+</div>
+<p>From https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
+Retrieved 2014-01-14
+If you have a problem with this implementation, report a bug against the above spec
+Or use custom methods to implement your own email validation</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || <span class="hljs-regexp">/^[a-zA-Z0-9.!#$%&amp;'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/</span>.test( value );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-99" id="section-99"></a>
+</div>
+<p>https://jqueryvalidation.org/url-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		url: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-100" id="section-100"></a>
+</div>
+<p>Copyright (c) 2010-2013 Diego Perini, MIT licensed
+https://gist.github.com/dperini/729294
+see also https://mathiasbynens.be/demo/url-regex
+modified to allow protocol-relative URLs</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || <span class="hljs-regexp">/^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i</span>.test( value );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-101" id="section-101"></a>
+</div>
+<p>https://jqueryvalidation.org/date-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		date: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || !<span class="hljs-regexp">/Invalid|NaN/</span>.test( <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( value ).toString() );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-102" id="section-102"></a>
+</div>
+<p>https://jqueryvalidation.org/dateISO-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		dateISO: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || <span class="hljs-regexp">/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/</span>.test( value );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-103" id="section-103"></a>
+</div>
+<p>https://jqueryvalidation.org/number-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		number: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || <span class="hljs-regexp">/^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/</span>.test( value );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-104" id="section-104"></a>
+</div>
+<p>https://jqueryvalidation.org/digits-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		digits: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || <span class="hljs-regexp">/^\d+$/</span>.test( value );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-105" id="section-105"></a>
+</div>
+<p>https://jqueryvalidation.org/minlength-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		minlength: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">var</span> length = $.isArray( value ) ? value.length : <span class="hljs-keyword">this</span>.getLength( value, element );
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || length &gt;= param;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-106" id="section-106"></a>
+</div>
+<p>https://jqueryvalidation.org/maxlength-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		maxlength: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">var</span> length = $.isArray( value ) ? value.length : <span class="hljs-keyword">this</span>.getLength( value, element );
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || length &lt;= param;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-107" id="section-107"></a>
+</div>
+<p>https://jqueryvalidation.org/rangelength-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		rangelength: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">var</span> length = $.isArray( value ) ? value.length : <span class="hljs-keyword">this</span>.getLength( value, element );
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || ( length &gt;= param[ <span class="hljs-number">0</span> ] &amp;&amp; length &lt;= param[ <span class="hljs-number">1</span> ] );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-108" id="section-108"></a>
+</div>
+<p>https://jqueryvalidation.org/min-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		min: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || value &gt;= param;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-109" id="section-109"></a>
+</div>
+<p>https://jqueryvalidation.org/max-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		max: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || value &lt;= param;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-110" id="section-110"></a>
+</div>
+<p>https://jqueryvalidation.org/range-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		range: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || ( value &gt;= param[ <span class="hljs-number">0</span> ] &amp;&amp; value &lt;= param[ <span class="hljs-number">1</span> ] );
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-111" id="section-111"></a>
+</div>
+<p>https://jqueryvalidation.org/step-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		step: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+			<span class="hljs-keyword">var</span> type = $( element ).attr( <span class="hljs-string">"type"</span> ),
+				errorMessage = <span class="hljs-string">"Step attribute on input type "</span> + type + <span class="hljs-string">" is not supported."</span>,
+				supportedTypes = [ <span class="hljs-string">"text"</span>, <span class="hljs-string">"number"</span>, <span class="hljs-string">"range"</span> ],
+				re = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>( <span class="hljs-string">"\\b"</span> + type + <span class="hljs-string">"\\b"</span> ),
+				notSupported = type &amp;&amp; !re.test( supportedTypes.join() ),
+				decimalPlaces = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> num </span>) </span>{
+					<span class="hljs-keyword">var</span> match = ( <span class="hljs-string">""</span> + num ).match( <span class="hljs-regexp">/(?:\.(\d+))?$/</span> );
+					<span class="hljs-keyword">if</span> ( !match ) {
+						<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+					}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-112" id="section-112"></a>
+</div>
+<p>Number of digits right of decimal point.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">					<span class="hljs-keyword">return</span> match[ <span class="hljs-number">1</span> ] ? match[ <span class="hljs-number">1</span> ].length : <span class="hljs-number">0</span>;
+				},
+				toInt = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> num </span>) </span>{
+					<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.round( num * <span class="hljs-built_in">Math</span>.pow( <span class="hljs-number">10</span>, decimals ) );
+				},
+				valid = <span class="hljs-literal">true</span>,
+				decimals;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-113" id="section-113"></a>
+</div>
+<p>Works only for text, number and range input types
+TODO find a way to support input types date, datetime, datetime-local, month, time and week</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( notSupported ) {
+				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>( errorMessage );
+			}
+
+			decimals = decimalPlaces( param );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-114" id="section-114"></a>
+</div>
+<p>Value can't have too many decimals</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">if</span> ( decimalPlaces( value ) &gt; decimals || toInt( value ) % toInt( param ) !== <span class="hljs-number">0</span> ) {
+				valid = <span class="hljs-literal">false</span>;
+			}
+
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.optional( element ) || valid;
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-115" id="section-115"></a>
+</div>
+<p>https://jqueryvalidation.org/equalTo-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		equalTo: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param </span>) </span>{
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-116" id="section-116"></a>
+</div>
+<p>Bind to the blur event of the target in order to revalidate whenever the target field is updated</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">			<span class="hljs-keyword">var</span> target = $( param );
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.onfocusout &amp;&amp; target.not( <span class="hljs-string">".validate-equalTo-blur"</span> ).length ) {
+				target.addClass( <span class="hljs-string">"validate-equalTo-blur"</span> ).on( <span class="hljs-string">"blur.validate-equalTo"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+					$( element ).valid();
+				} );
+			}
+			<span class="hljs-keyword">return</span> value === target.val();
+		},
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-117" id="section-117"></a>
+</div>
+<p>https://jqueryvalidation.org/remote-method/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">		remote: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> value, element, param, method </span>) </span>{
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.optional( element ) ) {
+				<span class="hljs-keyword">return</span> <span class="hljs-string">"dependency-mismatch"</span>;
+			}
+
+			method = <span class="hljs-keyword">typeof</span> method === <span class="hljs-string">"string"</span> &amp;&amp; method || <span class="hljs-string">"remote"</span>;
+
+			<span class="hljs-keyword">var</span> previous = <span class="hljs-keyword">this</span>.previousValue( element, method ),
+				validator, data, optionDataString;
+
+			<span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.settings.messages[ element.name ] ) {
+				<span class="hljs-keyword">this</span>.settings.messages[ element.name ] = {};
+			}
+			previous.originalMessage = previous.originalMessage || <span class="hljs-keyword">this</span>.settings.messages[ element.name ][ method ];
+			<span class="hljs-keyword">this</span>.settings.messages[ element.name ][ method ] = previous.message;
+
+			param = <span class="hljs-keyword">typeof</span> param === <span class="hljs-string">"string"</span> &amp;&amp; { <span class="hljs-attr">url</span>: param } || param;
+			optionDataString = $.param( $.extend( { <span class="hljs-attr">data</span>: value }, param.data ) );
+			<span class="hljs-keyword">if</span> ( previous.old === optionDataString ) {
+				<span class="hljs-keyword">return</span> previous.valid;
+			}
+
+			previous.old = optionDataString;
+			validator = <span class="hljs-keyword">this</span>;
+			<span class="hljs-keyword">this</span>.startRequest( element );
+			data = {};
+			data[ element.name ] = value;
+			$.ajax( $.extend( <span class="hljs-literal">true</span>, {
+				<span class="hljs-attr">mode</span>: <span class="hljs-string">"abort"</span>,
+				<span class="hljs-attr">port</span>: <span class="hljs-string">"validate"</span> + element.name,
+				<span class="hljs-attr">dataType</span>: <span class="hljs-string">"json"</span>,
+				<span class="hljs-attr">data</span>: data,
+				<span class="hljs-attr">context</span>: validator.currentForm,
+				<span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+					<span class="hljs-keyword">var</span> valid = response === <span class="hljs-literal">true</span> || response === <span class="hljs-string">"true"</span>,
+						errors, message, submitted;
+
+					validator.settings.messages[ element.name ][ method ] = previous.originalMessage;
+					<span class="hljs-keyword">if</span> ( valid ) {
+						submitted = validator.formSubmitted;
+						validator.resetInternals();
+						validator.toHide = validator.errorsFor( element );
+						validator.formSubmitted = submitted;
+						validator.successList.push( element );
+						validator.invalid[ element.name ] = <span class="hljs-literal">false</span>;
+						validator.showErrors();
+					} <span class="hljs-keyword">else</span> {
+						errors = {};
+						message = response || validator.defaultMessage( element, { <span class="hljs-attr">method</span>: method, <span class="hljs-attr">parameters</span>: value } );
+						errors[ element.name ] = previous.message = message;
+						validator.invalid[ element.name ] = <span class="hljs-literal">true</span>;
+						validator.showErrors( errors );
+					}
+					previous.valid = valid;
+					validator.stopRequest( element, valid );
+				}
+			}, param ) );
+			<span class="hljs-keyword">return</span> <span class="hljs-string">"pending"</span>;
+		}
+	}
+
+} );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-118" id="section-118"></a>
+</div>
+<p>Ajax mode: abort
+usage: $.ajax({ mode: &quot;abort&quot;[, port: &quot;uniqueport&quot;]});
+if mode:&quot;abort&quot; is used, the previous request on that port (port can be undefined) is aborted via XMLHttpRequest.abort()</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+<span class="hljs-keyword">var</span> pendingRequests = {},
+	ajax;
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-119" id="section-119"></a>
+</div>
+<p>Use a prefilter if available (1.5+)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">if</span> ( $.ajaxPrefilter ) {
+	$.ajaxPrefilter( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> settings, _, xhr </span>) </span>{
+		<span class="hljs-keyword">var</span> port = settings.port;
+		<span class="hljs-keyword">if</span> ( settings.mode === <span class="hljs-string">"abort"</span> ) {
+			<span class="hljs-keyword">if</span> ( pendingRequests[ port ] ) {
+				pendingRequests[ port ].abort();
+			}
+			pendingRequests[ port ] = xhr;
+		}
+	} );
+} <span class="hljs-keyword">else</span> {
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-120" id="section-120"></a>
+</div>
+<p>Proxy ajax</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">	ajax = $.ajax;
+	$.ajax = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> settings </span>) </span>{
+		<span class="hljs-keyword">var</span> mode = ( <span class="hljs-string">"mode"</span> <span class="hljs-keyword">in</span> settings ? settings : $.ajaxSettings ).mode,
+			port = ( <span class="hljs-string">"port"</span> <span class="hljs-keyword">in</span> settings ? settings : $.ajaxSettings ).port;
+		<span class="hljs-keyword">if</span> ( mode === <span class="hljs-string">"abort"</span> ) {
+			<span class="hljs-keyword">if</span> ( pendingRequests[ port ] ) {
+				pendingRequests[ port ].abort();
+			}
+			pendingRequests[ port ] = ajax.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );
+			<span class="hljs-keyword">return</span> pendingRequests[ port ];
+		}
+		<span class="hljs-keyword">return</span> ajax.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );
+	};
+}
+<span class="hljs-keyword">return</span> $;
+}));
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
