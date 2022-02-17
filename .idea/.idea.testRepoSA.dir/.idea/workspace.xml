@@ -8,6 +8,7 @@
     <list default="true" id="4740cae9-efd5-4e23-94f4-7c153505d103" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.testRepoSA.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.testRepoSA.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TA2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TA2.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +70,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645033347934</updated>
       <workItem from="1645033378660" duration="1462000" />
-      <workItem from="1645046499580" duration="2313000" />
+      <workItem from="1645046499580" duration="2989000" />
     </task>
     <servers />
   </component>
