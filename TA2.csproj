@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Include=".github\workflows\action.yml" />
+    <Content Include=".github\workflows\template.yml" />
   </ItemGroup>
 
 </Project>
