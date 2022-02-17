@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Content Include=".github\workflows\action.yml" />
-    <Content Include=".github\workflows\test.yml" />
   </ItemGroup>
 
 </Project>
