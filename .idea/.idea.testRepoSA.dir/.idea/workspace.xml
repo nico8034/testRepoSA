@@ -5,11 +5,7 @@
     <projectFile profileName="IIS Express">TA2.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4740cae9-efd5-4e23-94f4-7c153505d103" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.testRepoSA.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.testRepoSA.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TA2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TA2.csproj" afterDir="false" />
-    </list>
+    <list default="true" id="4740cae9-efd5-4e23-94f4-7c153505d103" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,7 +66,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645033347934</updated>
       <workItem from="1645033378660" duration="1462000" />
-      <workItem from="1645046499580" duration="2989000" />
+      <workItem from="1645046499580" duration="3490000" />
     </task>
     <servers />
   </component>
